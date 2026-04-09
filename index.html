@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 توقع الجمهور - 200+ سؤال</title>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --primary-dark: #00cc6a;
+            --secondary: #7000ff;
+            --bg: #0a0a1a;
+            --panel: rgba(15, 20, 40, 0.95);
+            --accent: #1a1a3a;
+            --text: #ffffff;
+            --gold: #ffd700;
+            --danger: #ff3366;
+        }
+        
+        body { 
+            background: linear-gradient(135deg, #0a0a1a 0%, #0f0f2a 50%, #1a0a2a 100%);
+            color: var(--text); 
+            font-family: 'Cairo', 'Poppins', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            text-align: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .grid-3d {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: repeating-linear-gradient(90deg, rgba(0,255,136,0.05) 0px, rgba(0,255,136,0.05) 2px, transparent 2px, transparent 50px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .screen { 
+            background: var(--panel); 
+            padding: 30px 25px; 
+            border-radius: 32px; 
+            width: 90%; 
+            max-width: 520px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,255,136,0.1), 0 0 20px rgba(0,255,136,0.1);
+            position: relative;
+            backdrop-filter: blur(10px);
+            z-index: 1;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .screen:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 50px rgba(0,0,0,0.5), 0 0 0 2px rgba(0,255,136,0.3), 0 0 30px rgba(0,255,136,0.2);
+        }
+
+        .hidden { display: none !important; }
+        
+        h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #00ff88, #7000ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .glass-input { 
+            padding: 14px 20px; 
+            border-radius: 60px; 
+            border: 1px solid rgba(0,255,136,0.3); 
+            background: rgba(0,0,0,0.5); 
+            color: white; 
+            margin: 10px 0; 
+            width: 85%; 
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .glass-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0,255,136,0.3);
+            transform: scale(1.02);
+        }
+        
+        button { 
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #0a0a1a; 
+            border: none; 
+            padding: 12px 28px; 
+            border-radius: 60px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 1rem; 
+            transition: all 0.3s; 
+            margin: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+        
+        button:hover::after {
+            width: 200%;
+            height: 200%;
+        }
+        
+        button:hover { 
+            transform: scale(1.05); 
+            filter: brightness(1.1);
+            box-shadow: 0 5px 25px rgba(0,255,136,0.4);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .timer-wrapper {
+            background: rgba(0,0,0,0.5);
+            border-radius: 60px;
+            padding: 10px 20px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .timer { 
+            font-size: 2rem; 
+            color: var(--primary); 
+            font-weight: bold; 
+            font-family: monospace;
+            text-shadow: 0 0 10px rgba(0,255,136,0.5);
+        }
+        
+        .score-box { 
+            background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(112,0,255,0.1));
+            padding: 10px 15px; 
+            border-radius: 60px; 
+            font-size: 0.9rem;
+            border: 1px solid rgba(0,255,136,0.3);
+        }
+        
+        .answers-grid { 
+            display: grid; 
+            gap: 12px; 
+            margin: 20px 0; 
+        }
+        
+        .ans-item { 
+            background: rgba(0,0,0,0.6); 
+            padding: 16px 20px; 
+            border-radius: 60px; 
+            border: 1px solid rgba(0,255,136,0.2); 
+            display: flex; 
+            justify-content: space-between; 
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: default;
+            position: relative;
+        }
+        
+        .ans-item:hover {
+            border-color: rgba(0,255,136,0.5);
+            transform: translateX(-5px);
+        }
+        
+        .ans-item.found { 
+            border-color: var(--primary); 
+            background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(112,0,255,0.1));
+            animation: glow 0.5s ease;
+            cursor: default;
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 0 0 rgba(0,255,136,0.5); }
+            100% { box-shadow: 0 0 20px 5px rgba(0,255,136,0.2); }
+        }
+        
+        .ans-number {
+            background: rgba(0,255,136,0.2);
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        
+        .ans-value {
+            color: var(--gold);
+            font-weight: bold;
+        }
+        
+        .player-list {
+            background: rgba(0,0,0,0.4);
+            border-radius: 24px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .player-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            margin: 8px 0;
+            background: rgba(0,255,136,0.05);
+            border-radius: 60px;
+            border: 1px solid rgba(0,255,136,0.2);
+            transition: all 0.3s;
+        }
+        
+        .player-card.you {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(112,0,255,0.05));
+        }
+        
+        .rank-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 12px 18px; 
+            margin: 8px 0;
+            background: rgba(0,0,0,0.4);
+            border-radius: 60px;
+            transition: all 0.3s;
+        }
+        
+        .rank-item:hover {
+            transform: translateX(-5px);
+            background: rgba(0,255,136,0.1);
+        }
+        
+        .winner-name { 
+            background: linear-gradient(135deg, var(--primary), var(--gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2rem; 
+            margin: 15px 0; 
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s linear;
+        }
+        
+        .room-code-box {
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 20px;
+            margin: 10px 0;
+        }
+        
+        .room-code {
+            font-size: 2rem;
+            letter-spacing: 8px;
+            font-family: monospace;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #0a0a1a;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: slideUp 3s ease forwards;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateX(-50%) translateY(50px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(50px); }
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 60px;
+            border: 1px solid rgba(0,255,136,0.3);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .input-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0,255,136,0.3);
+        }
+        
+        .feedback-msg {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="grid-3d"></div>
+
+<div class="container">
+    <div id="loginScreen" class="screen">
+        <h1>🎯 توقع الجمهور</h1>
+        <p style="color: #888; margin-bottom: 20px;">غرف من 2 إلى 4 لاعبين • أكثر من 200 سؤال متنوع</p>
+        <input type="text" id="userName" class="glass-input" placeholder="اسمك" maxlength="15">
+        <div>
+            <button onclick="createRoom()">✨ إنشاء غرفة</button>
+        </div>
+        <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+            <input type="text" id="roomInput" class="glass-input" placeholder="رمز الغرفة" maxlength="4" style="width: 120px;">
+            <button onclick="joinRoom()">🚪 انضمام</button>
+        </div>
+        <div style="margin-top: 20px; font-size: 0.7rem; opacity: 0.6;">
+            💡 أكثر من 200 سؤال متنوع | كل سؤال له إجابات مخفية | كل لاعب يرى إجاباته الخاصة
+        </div>
+    </div>
+
+    <div id="waitingScreen" class="screen hidden">
+        <h2>🆔 رمز الغرفة</h2>
+        <div class="room-code-box">
+            <div class="room-code" id="roomCode">----</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="waitingProgress"></div>
+        </div>
+        <div class="player-list">
+            <div id="playerList"></div>
+        </div>
+        <div id="waitingMsg" style="color: var(--primary); margin: 10px 0;">⏳ انتظار لاعبين...</div>
+        <button id="startBtn" class="hidden" onclick="startGame()">▶ بدء اللعبة</button>
+        <button onclick="leaveRoom()" style="background: rgba(255,255,255,0.1);">🚪 مغادرة</button>
+    </div>
+
+    <div id="gameScreen" class="screen hidden">
+        <div class="timer-wrapper">
+            <span>⏱️ المؤقت</span>
+            <span class="timer" id="timeLeft">45</span>
+        </div>
+        <div class="score-box">
+            🎯 <span id="myScoreDisplay">0</span> نقطة | السؤال <span id="qCount">1</span>/<span id="totalQ">4</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="questionProgress"></div>
+        </div>
+        <h3 id="questionText" style="margin: 15px 0; font-size: 1.2rem;">جاري التحميل...</h3>
+        <div id="answersBoard" class="answers-grid"></div>
+        <div class="input-group">
+            <input type="text" id="guessInput" placeholder="اكتب إجابتك هنا..." autocomplete="off">
+            <button onclick="submitGuess()">إرسال</button>
+        </div>
+        <div class="feedback-msg" id="feedbackMsg"></div>
+    </div>
+
+    <div id="resultScreen" class="screen hidden">
+        <h1>🏁 نهاية اللعبة</h1>
+        <div class="winner-name" id="winnerName">...</div>
+        <div id="rankings"></div>
+        <button onclick="location.reload()">🎮 لعبة جديدة</button>
+    </div>
+</div>
+
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyCTKYD680Jdbl0azC9RTtuKZBaLX2uU_Ck",
+    authDomain: "my-online-store-34f34.firebaseapp.com",
+    databaseURL: "https://my-online-store-34f34-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "my-online-store-34f34",
+    storageBucket: "my-online-store-34f34.firebasestorage.app",
+    messagingSenderId: "288655549705",
+    appId: "1:288655549705:web:06901ce4ac1a50eebe1fd8"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let myId = Math.random().toString(36).substr(2, 9);
+let myName = "";
+let currentRoom = "";
+let isHost = false;
+let timerInterval;
+
+// إنشاء النجوم
+function createStars() {
+    const starsContainer = document.getElementById('stars');
+    for(let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.width = (Math.random() * 3 + 1) + 'px';
+        star.style.height = star.style.width;
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        starsContainer.appendChild(star);
+    }
+}
+createStars();
+
+// ========== 200+ سؤال متنوع ==========
+const allQuestions = [
+    // الأكل والشراب
+    {q: "☕ شيء يشربه الناس في الصباح", a: {"قهوة": 45, "شاي": 25, "حليب": 20, "ماء": 10}},
+    {q: "🍕 الأكلة المفضلة لدى الشباب", a: {"بيتزا": 50, "برجر": 30, "معكرونة": 12, "شاورما": 8}},
+    {q: "🍎 فاكهة صحية", a: {"تفاح": 40, "موز": 30, "برتقال": 20, "فراولة": 10}},
+    {q: "🍫 نوع حلويات مفضل", a: {"شوكولاتة": 55, "كيك": 20, "بسكويت": 15, "آيس كريم": 10}},
+    {q: "🥤 مشروب غازي مشهور", a: {"كوكاكولا": 50, "بيبسي": 30, "سبrites": 12, "فانتا": 8}},
+    {q: "🍲 طبق رئيسي في الغداء", a: {"رز": 40, "خبز": 30, "معكرونة": 20, "بطاطس": 10}},
+    {q: "🧀 شيء يوضع على الخبز", a: {"جبن": 45, "زبدة": 25, "مربى": 20, "عسل": 10}},
+    {q: "🍜 شوربة مشهورة", a: {"عدس": 50, "خضار": 25, "دجاج": 15, "طماطم": 10}},
+    {q: "🥗 سلطة أساسية", a: {"خس": 40, "طماطم": 35, "خيار": 20, "جزر": 5}},
+    {q: "🍳 شيء يقدم مع البيض", a: {"خبز": 50, "جبن": 25, "زيتون": 15, "طماطم": 10}},
+    
+    // الحيوانات
+    {q: "🐱 حيوان أليف مفضل", a: {"قط": 45, "كلب": 40, "سمك": 10, "هامستر": 5}},
+    {q: "🦁 حيوان مفترس", a: {"أسد": 50, "نمر": 25, "ذئب": 15, "تمساح": 10}},
+    {q: "🐘 حيوان ضخم", a: {"فيل": 60, "زرافة": 20, "فرس النهر": 12, "وحيد القرن": 8}},
+    {q: "🐬 حيوان بحري", a: {"دولفين": 45, "حوت": 30, "قرش": 15, "سلحفاة": 10}},
+    {q: "🐦 طائر يطير", a: {"نسر": 40, "حمام": 30, "عصفور": 20, "بومة": 10}},
+    {q: "🐎 حيوان يستخدم للركوب", a: {"حصان": 60, "جمل": 25, "حمار": 10, "بغل": 5}},
+    {q: "🐍 حيوان زاحف", a: {"ثعبان": 55, "سحلية": 20, "تمساح": 15, "سلحفاة": 10}},
+    {q: "🐝 حشرة تنتج العسل", a: {"نحل": 80, "نمل": 10, "ذباب": 5, "دبور": 5}},
+    
+    // الرياضة
+    {q: "⚽ رياضة جماعية", a: {"كرة قدم": 55, "كرة سلة": 20, "كرة طائرة": 15, "يد": 10}},
+    {q: "🏊 رياضة مائية", a: {"سباحة": 60, "غطس": 20, "تجديف": 12, "ركوب أمواج": 8}},
+    {q: "🎾 رياضة بالمضرب", a: {"تنس": 50, "ريشة طائرة": 30, "اسكواش": 15, "بينغ بونغ": 5}},
+    {q: "🥊 رياضة قتالية", a: {"ملاكمة": 45, "كاراتيه": 30, "جودو": 15, "تاي بوكس": 10}},
+    {q: "🏃 رياضة جري", a: {"عدو": 50, "ماراثون": 25, "سباق": 15, "هرولة": 10}},
+    {q: "🏋️ رياضة ألعاب قوة", a: {"رفع أثقال": 55, "كمال أجسام": 30, "مصارعة": 10, "جوجيتسو": 5}},
+    
+    // التكنولوجيا
+    {q: "📱 تطبيق تواصل اجتماعي", a: {"واتساب": 45, "فيسبوك": 25, "انستغرام": 20, "تيك توك": 10}},
+    {q: "💻 نظام تشغيل مشهور", a: {"ويندوز": 55, "ماك": 20, "لينكس": 15, "أندرويد": 10}},
+    {q: "🎮 لعبة فيديو مشهورة", a: {"فورتنايت": 35, "ماين كرافت": 30, "ببجي": 20, "كول أوف ديوتي": 15}},
+    {q: "🔍 محرك بحث", a: {"جوجل": 80, "بينج": 10, "ياهو": 5, "دك دك غو": 5}},
+    {q: "📧 وسيلة تواصل", a: {"بريد إلكتروني": 50, "رسالة": 30, "مكالمة": 15, "فيديو": 5}},
+    
+    // المدرسة والتعليم
+    {q: "📚 مادة دراسية", a: {"رياضيات": 40, "عربي": 25, "علوم": 20, "تاريخ": 15}},
+    {q: "✏️ أداة كتابة", a: {"قلم": 55, "رصاص": 25, "حبر": 12, "لوح": 8}},
+    {q: "🏫 مكان الدراسة", a: {"مدرسة": 60, "جامعة": 25, "معهد": 10, "بيت": 5}},
+    {q: "🎓 شهادة جامعية", a: {"بكالوريوس": 50, "ماجستير": 30, "دكتوراه": 15, "دبلوم": 5}},
+    {q: "📖 شيء تقرأه", a: {"كتاب": 55, "جريدة": 20, "مجلة": 15, "رواية": 10}},
+    
+    // المنزل والعائلة
+    {q: "🏠 غرفة في المنزل", a: {"نوم": 40, "جلوس": 30, "مطبخ": 20, "حمام": 10}},
+    {q: "🛋️ أثاث منزلي", a: {"كنبة": 40, "طاولة": 25, "كرسي": 20, "خزانة": 15}},
+    {q: "🍳 جهاز في المطبخ", a: {"ثلاجة": 35, "فرن": 30, "غسالة": 20, "خلاط": 15}},
+    {q: "🧹 أداة تنظيف", a: {"مكنسة": 45, "ممسحة": 25, "خرقة": 20, "فرشاة": 10}},
+    
+    // الصحة والجمال
+    {q: "💊 دواء شائع", a: {"بانادول": 50, "اسبرين": 25, "مضاد حيوي": 15, "فيتامين": 10}},
+    {q: "🏥 مكان العلاج", a: {"مستشفى": 55, "عيادة": 30, "صيدلية": 10, "بيت": 5}},
+    {q: "🦷 طبيب متخصص", a: {"أسنان": 40, "عيون": 30, "جلدية": 20, "قلب": 10}},
+    {q: "💄 مادة تجميل", a: {"أحمر شفاه": 35, "كحل": 30, "ظافر": 20, "بودرة": 15}},
+    
+    // السفر والطبيعة
+    {q: "✈️ وسيلة سفر", a: {"طائرة": 45, "سيارة": 35, "قطار": 12, "باص": 8}},
+    {q: "🌊 منظر طبيعي", a: {"بحر": 45, "جبل": 30, "غابة": 15, "صحراء": 10}},
+    {q: "🏝️ مكان سياحي", a: {"شاطئ": 50, "مدينة": 25, "متحف": 15, "منتزه": 10}},
+    {q: "🌡️ ظاهرة جوية", a: {"مطر": 45, "شمس": 30, "ريح": 15, "ثلج": 10}},
+    
+    // الفن والترفيه
+    {q: "🎬 فيلم شهير", a: {"تايتانيك": 30, "افاتار": 25, "الملك الأسد": 25, "هاري بوتر": 20}},
+    {q: "🎵 آلة موسيقية", a: {"جيتار": 40, "بيانو": 30, "كمان": 20, "طبلة": 10}},
+    {q: "🎨 لون أساسي", a: {"أحمر": 40, "أزرق": 35, "أصفر": 15, "أخضر": 10}},
+    {q: "📺 برنامج تلفزيوني", a: {"مسلسل": 45, "أخبار": 25, "رياضة": 20, "كارتون": 10}},
+    
+    // أكثر
+    {q: "💰 عملة معروفة", a: {"دولار": 50, "يورو": 25, "ريال": 15, "دينار": 10}},
+    {q: "🎁 مناسبة للهدايا", a: {"عيد": 40, "زواج": 30, "ميلاد": 20, "نجاح": 10}},
+    {q: "⏰ وقت من اليوم", a: {"صباح": 40, "مساء": 35, "ليل": 15, "ظهر": 10}},
+    {q: "📞 اختراع مهم", a: {"هاتف": 45, "انترنت": 30, "كهرباء": 15, "سيارة": 10}},
+    {q: "🕋 مكان مقدس", a: {"مسجد": 50, "كنيسة": 25, "معبد": 15, "كنيس": 10}},
+    {q: "🌙 شهر عربي", a: {"رمضان": 55, "محرم": 20, "شعبان": 15, "ذو الحجة": 10}},
+    {q: "👔 لبس رسمي", a: {"بدلة": 45, "ربطة عنق": 25, "قميص": 20, "بنطلون": 10}},
+    {q: "👶 مرحلة عمرية", a: {"طفولة": 45, "مراهقة": 30, "شباب": 15, "كهولة": 10}},
+    {q: "💍 مجوهرات", a: {"ذهب": 50, "فضة": 25, "ألماس": 15, "لؤلؤ": 10}},
+    {q: "🕹️ هواية شائعة", a: {"قراءة": 35, "رياضة": 30, "ألعاب": 25, "سفر": 10}},
+    {q: "🔑 شيء مهم في البيت", a: {"مفتاح": 40, "باب": 30, "نافذة": 20, "سور": 10}},
+    {q: "🚗 علامة سيارة", a: {"تويوتا": 40, "مرسيدس": 25, "بي ام دبليو": 20, "هوندا": 15}},
+    {q: "📺 جهاز في المنزل", a: {"تلفاز": 45, "ثلاجة": 25, "غسالة": 20, "مكيف": 10}},
+    {q: "🧸 لعبة أطفال", a: {"دمية": 40, "سيارة": 35, "كرة": 15, "تركيب": 10}},
+    {q: "🎄 عطلة دينية", a: {"الفطر": 40, "الأضحى": 35, "الميلاد": 15, "الفصح": 10}},
+    {q: "🧩 نوع ذكاء", a: {"لغوي": 35, "رياضي": 35, "اجتماعي": 20, "مكاني": 10}},
+    {q: "🎭 مهنة فنية", a: {"ممثل": 45, "مغني": 30, "رسام": 15, "كاتب": 10}},
+    {q: "⚙️ حرفة يدوية", a: {"نجارة": 40, "حدادة": 30, "خياطة": 20, "بناء": 10}},
+    {q: "🌱 نبات منزلي", a: {"صبار": 45, "ورد": 30, "نخيل": 15, "ريحان": 10}},
+    {q: "🪑 قطعة أثاث", a: {"طاولة": 35, "كرسي": 30, "سرير": 25, "خزانة": 10}},
+];
+
+// دالة لجلب أسئلة عشوائية (4 أسئلة لكل لعبة)
+function getRandomQuestions(count) {
+    const shuffled = [...allQuestions];
+    for(let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, count);
+}
+
+// الأسئلة المستخدمة في اللعبة الحالية
+let currentGameQuestions = [];
+
+// دالة مقارنة ذكية للإجابات
+function isMatchingAnswer(userAnswer, correctAnswer) {
+    const u = userAnswer.toLowerCase().trim();
+    const c = correctAnswer.toLowerCase().trim();
+    
+    // مقارنة مباشرة
+    if (u === c) return true;
+    
+    // إزالة "ال" من البداية
+    const uWithoutAl = u.replace(/^ال/, '');
+    const cWithoutAl = c.replace(/^ال/, '');
+    if (uWithoutAl === cWithoutAl) return true;
+    
+    // إزالة التاء المربوطة
+    if (uWithoutAl.replace(/ه$/, '') === cWithoutAl.replace(/ه$/, '')) return true;
+    
+    // مرادفات شائعة
+    const synonyms = {
+        "قهوة": ["قهوي", "qahwa", "coffee"],
+        "شاي": ["شاى", "te", "tea"],
+        "ماء": ["ماي", "ووتر", "water"],
+        "بيتزا": ["بيتزا", "pizza"],
+        "برجر": ["برغر", "همبرجر", "burger"],
+        "تفاح": ["تفاحة", "apple"],
+        "موز": ["موزة", "banana"],
+        "قط": ["قطة", "بس", "بسة", "cat"],
+        "كلب": ["كلبة", "دوج", "dog"],
+        "أسد": ["سبع", "ليث", "lion"],
+        "فيل": ["فيلة", "elephant"],
+        "حصان": ["فرس", "horse"],
+        "جمل": ["بعير", "camel"],
+        "ثعبان": ["حية", "snake"],
+        "نحل": ["نحلة", "bee"],
+        "كرة قدم": ["سوكر", "football"],
+        "سباحة": ["سويما", "swim"],
+        "واتساب": ["واتس", "whatsapp"],
+        "فيسبوك": ["فيس", "facebook"],
+        "قلم": ["قل", "pen"],
+        "كتاب": ["كيتاب", "book"],
+        "بيت": ["منزل", "دار", "house"],
+        "مفتاح": ["مفتح", "مفاتيح", "key"]
+    };
+    
+    for(let key in synonyms) {
+        if(c === key && synonyms[key].includes(u)) return true;
+        if(u === key && synonyms[key].includes(c)) return true;
+    }
+    
+    // حساب التشابه بين النصوص (Levenshtein distance)
+    function getSimilarity(a, b) {
+        if(a.length === 0 || b.length === 0) return 0;
+        let longer = a.length > b.length ? a : b;
+        let shorter = a.length > b.length ? b : a;
+        if(longer.indexOf(shorter) !== -1) return 0.8;
+        let matches = 0;
+        for(let i = 0; i < shorter.length; i++) {
+            if(longer.includes(shorter[i])) matches++;
+        }
+        return matches / longer.length;
+    }
+    
+    const similarity = getSimilarity(uWithoutAl, cWithoutAl);
+    if(similarity > 0.7) return true;
+    
+    return false;
+}
+
+function showNotification(msg, isSuccess = true) {
+    const notif = document.createElement('div');
+    notif.className = 'notification';
+    notif.textContent = msg;
+    notif.style.background = isSuccess ? 'linear-gradient(135deg, #00ff88, #7000ff)' : 'linear-gradient(135deg, #ff3366, #cc1144)';
+    notif.style.color = 'white';
+    document.body.appendChild(notif);
+    setTimeout(() => notif.remove(), 2500);
+}
+
+function createRoom() {
+    myName = document.getElementById('userName').value.trim();
+    if(!myName) {
+        showNotification("✏️ اكتب اسمك أولاً!", false);
+        return;
+    }
+    currentRoom = Math.floor(1000 + Math.random() * 9000).toString();
+    isHost = true;
+    
+    db.ref('rooms/' + currentRoom).set({
+        status: 'waiting',
+        qIndex: 0,
+        players: { [myId]: { name: myName, score: 0, found: [] } },
+        timer: 45,
+        questions: null  // سيتم تعيين الأسئلة عند بدء اللعبة
+    }).then(() => {
+        showScreen('waitingScreen');
+        document.getElementById('roomCode').innerText = currentRoom;
+        listenToRoom();
+        showNotification(`✅ تم إنشاء الغرفة! الرمز: ${currentRoom}`);
+    }).catch(() => showNotification("خطأ في الاتصال!", false));
+}
+
+function joinRoom() {
+    myName = document.getElementById('userName').value.trim();
+    const rCode = document.getElementById('roomInput').value.trim();
+    if(!myName || rCode.length !== 4) {
+        showNotification("تأكد من الاسم ورمز الغرفة!", false);
+        return;
+    }
+
+    db.ref('rooms/' + rCode).once('value', snap => {
+        if(snap.exists()) {
+            const data = snap.val();
+            if(Object.keys(data.players).length >= 4) {
+                showNotification("الغرفة ممتلئة (4/4)!", false);
+                return;
+            }
+            currentRoom = rCode;
+            db.ref('rooms/' + currentRoom + '/players/' + myId).set({ name: myName, score: 0, found: [] });
+            showScreen('waitingScreen');
+            document.getElementById('roomCode').innerText = currentRoom;
+            listenToRoom();
+            showNotification(`✅ انضممت إلى الغرفة ${rCode}`);
+        } else { 
+            showNotification("❌ الغرفة غير موجودة!", false);
+        }
+    });
+}
+
+function listenToRoom() {
+    db.ref('rooms/' + currentRoom).on('value', snap => {
+        const data = snap.val();
+        if(!data) return;
+
+        const players = data.players;
+        const playerCount = Object.keys(players).length;
+        
+        const pList = document.getElementById('playerList');
+        pList.innerHTML = "";
+        for(let id in players) {
+            const isYou = (id === myId);
+            pList.innerHTML += `
+                <div class="player-card ${isYou ? 'you' : ''}">
+                    <span>${isYou ? '👤' : '👥'} ${players[id].name}</span>
+                    <span>${players[id].score} نقاط</span>
+                </div>
+            `;
+        }
+        
+        const progressPercent = (playerCount / 4) * 100;
+        document.getElementById('waitingProgress').style.width = progressPercent + '%';
+        
+        if(isHost && playerCount >= 2) {
+            document.getElementById('startBtn').classList.remove('hidden');
+            document.getElementById('waitingMsg').innerHTML = "✅ جاهز! اضغط بدء اللعبة";
+        } else if(isHost) {
+            document.getElementById('waitingMsg').innerHTML = "⏳ انتظر لاعبين آخرين (2 على الأقل)";
+        }
+
+        if(data.status === 'playing') {
+            if(document.getElementById('gameScreen').classList.contains('hidden')) {
+                showScreen('gameScreen');
+            }
+            updateGameUI(data);
+        }
+
+        if(data.status === 'finished') {
+            clearInterval(timerInterval);
+            showFinalResults(players);
+        }
+    });
+}
+
+function startGame() {
+    // اختيار 4 أسئلة عشوائية من أصل 200+
+    currentGameQuestions = getRandomQuestions(4);
+    db.ref('rooms/' + currentRoom).update({ 
+        status: 'playing', 
+        qIndex: 0, 
+        timer: 45,
+        questions: currentGameQuestions
+    });
+    startTimer();
+    showNotification("🎮 بدأت اللعبة! حظاً سعيداً");
+}
+
+function startTimer() {
+    let timeLeft = 45;
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        db.ref('rooms/' + currentRoom).update({ timer: timeLeft });
+        const progressPercent = (timeLeft / 45) * 100;
+        document.getElementById('questionProgress').style.width = progressPercent + '%';
+        document.getElementById('timeLeft').innerText = timeLeft;
+        
+        if(timeLeft <= 0) {
+            clearInterval(timerInterval);
+            nextQuestionOrFinish();
+        }
+    }, 1000);
+}
+
+function updateGameUI(data) {
+    const questions = data.questions || currentGameQuestions;
+    if(!questions || questions.length === 0) return;
+    
+    const qData = questions[data.qIndex];
+    if(!qData) return;
+    
+    document.getElementById('questionText').innerText = qData.q;
+    document.getElementById('qCount').innerText = `${data.qIndex + 1}/4`;
+    document.getElementById('totalQ').innerText = '4';
+    document.getElementById('timeLeft').innerText = data.timer;
+    document.getElementById('myScoreDisplay').innerText = data.players[myId]?.score || 0;
+
+    const myFound = data.players[myId]?.found || [];
+    
+    const board = document.getElementById('answersBoard');
+    board.innerHTML = "";
+    let idx = 1;
+    for(let ans in qData.a) {
+        const isFound = myFound.includes(ans);
+        board.innerHTML += `
+            <div class="ans-item ${isFound ? 'found' : ''}">
+                <span><span class="ans-number">${idx}</span> ${isFound ? ans : '???'}</span>
+                <span class="ans-value">${isFound ? qData.a[ans] + '%' : '?'}</span>
+            </div>
+        `;
+        idx++;
+    }
+}
+
+function submitGuess() {
+    const guess = document.getElementById('guessInput').value.trim();
+    if(!guess) {
+        document.getElementById('feedbackMsg').innerHTML = "✏️ اكتب تخميناً أولاً!";
+        return;
+    }
+    
+    db.ref('rooms/' + currentRoom).once('value', snap => {
+        const data = snap.val();
+        if(!data || data.status !== 'playing') return;
+        
+        const questions = data.questions || currentGameQuestions;
+        const qData = questions[data.qIndex];
+        
+        let matchedAnswer = null;
+        for(let ans in qData.a) {
+            if(isMatchingAnswer(guess, ans)) {
+                matchedAnswer = ans;
+                break;
+            }
+        }
+        
+        const myFound = data.players[myId]?.found || [];
+        
+        if(matchedAnswer && !myFound.includes(matchedAnswer)) {
+            const points = qData.a[matchedAnswer];
+            const newScore = (data.players[myId]?.score || 0) + points;
+            const newFound = [...myFound, matchedAnswer];
+            
+            db.ref('rooms/' + currentRoom + '/players/' + myId).update({ 
+                score: newScore,
+                found: newFound
+            });
+            
+            document.getElementById('guessInput').value = "";
+            document.getElementById('feedbackMsg').innerHTML = `✅ صحيح! +${points} نقطة`;
+            showNotification(`✅ صحيح! +${points} نقطة`);
+            
+            updateGameUI({...data, players: {...data.players, [myId]: {...data.players[myId], score: newScore, found: newFound}}});
+        } 
+        else if(matchedAnswer && myFound.includes(matchedAnswer)) {
+            document.getElementById('feedbackMsg').innerHTML = "⚠️ هذه الإجابة سبق أن اكتشفتها!";
+            showNotification("⚠️ هذه الإجابة سبق أن اكتشفتها!", false);
+        }
+        else {
+            document.getElementById('feedbackMsg').innerHTML = `❌ "${guess}" غير صحيح!`;
+            showNotification(`❌ "${guess}" غير صحيح!`, false);
+        }
+    });
+}
+
+function nextQuestionOrFinish() {
+    if(!isHost) return;
+    db.ref('rooms/' + currentRoom).once('value', snap => {
+        const data = snap.val();
+        if(data.qIndex < 3) {
+            db.ref('rooms/' + currentRoom).update({
+                qIndex: data.qIndex + 1,
+                timer: 45
+            });
+            startTimer();
+            showNotification(`📋 السؤال ${data.qIndex + 2} من 4`);
+        } else {
+            db.ref('rooms/' + currentRoom).update({ status: 'finished' });
+        }
+    });
+}
+
+function showFinalResults(players) {
+    showScreen('resultScreen');
+    const sorted = Object.values(players).sort((a, b) => b.score - a.score);
+    document.getElementById('winnerName').innerText = sorted[0].name;
+    
+    const rankDiv = document.getElementById('rankings');
+    rankDiv.innerHTML = "";
+    sorted.forEach((p, index) => {
+        const medal = index === 0 ? '🏆' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : `${index+1}📌`));
+        rankDiv.innerHTML += `
+            <div class="rank-item">
+                <span>${medal} ${p.name}</span>
+                <span style="color: #00ff88;">${p.score} نقطة</span>
+            </div>
+        `;
+    });
+}
+
+function leaveRoom() {
+    if(currentRoom) {
+        db.ref('rooms/' + currentRoom + '/players/' + myId).remove();
+    }
+    location.reload();
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+}
+
+document.addEventListener('keypress', (e) => {
+    if(e.key === 'Enter' && !document.getElementById('gameScreen').classList.contains('hidden')) {
+        submitGuess();
+    }
+});
+</script>
+</body>
+</html>
