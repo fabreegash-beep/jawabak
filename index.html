@@ -2,8 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 توقع الجمهور - 200+ سؤال</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🌟 توقع الجمهور - تحدي الأصوات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
     
@@ -15,32 +16,40 @@
         }
 
         :root {
-            --primary: #00ff88;
-            --primary-dark: #00cc6a;
-            --secondary: #7000ff;
-            --bg: #0a0a1a;
-            --panel: rgba(15, 20, 40, 0.95);
-            --accent: #1a1a3a;
-            --text: #ffffff;
+            --primary: #ff6b6b;
+            --primary-dark: #ee5a5a;
+            --secondary: #4ecdc4;
+            --accent: #ffe66d;
+            --bg-dark: #1a1a2e;
+            --bg-darker: #16213e;
+            --panel: rgba(255, 255, 255, 0.95);
+            --text-dark: #2d3436;
+            --text-light: #ffffff;
             --gold: #ffd700;
-            --danger: #ff3366;
+            --silver: #c0c0c0;
+            --bronze: #cd7f32;
+            --success: #00b894;
+            --danger: #e17055;
+            --purple: #a855f7;
+            --pink: #ec4899;
+            --blue: #3b82f6;
+            --orange: #f97316;
         }
         
         body { 
-            background: linear-gradient(135deg, #0a0a1a 0%, #0f0f2a 50%, #1a0a2a 100%);
-            color: var(--text); 
-            font-family: 'Cairo', 'Poppins', sans-serif; 
-            margin: 0; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh; 
+            font-family: 'Cairo', sans-serif; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            min-height: 100vh; 
             text-align: center;
             position: relative;
             overflow-x: hidden;
         }
 
-        .stars {
+        /* Animated Background Particles */
+        .particles {
             position: fixed;
             top: 0;
             left: 0;
@@ -48,154 +57,344 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            overflow: hidden;
         }
         
-        .star {
+        .particle {
             position: absolute;
-            background: white;
             border-radius: 50%;
-            opacity: 0;
-            animation: twinkle 3s infinite;
+            animation: float 15s infinite;
+            opacity: 0.6;
         }
         
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
         }
         
-        .grid-3d {
+        .bubbles-container {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 200px;
-            background: repeating-linear-gradient(90deg, rgba(0,255,136,0.05) 0px, rgba(0,255,136,0.05) 2px, transparent 2px, transparent 50px);
+            height: 100%;
             pointer-events: none;
             z-index: 0;
         }
+        
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+            border-radius: 50%;
+            animation: rise 8s infinite;
+            opacity: 0.4;
+        }
+        
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0.4; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
 
-        .screen { 
-            background: var(--panel); 
-            padding: 30px 25px; 
-            border-radius: 32px; 
-            width: 90%; 
-            max-width: 520px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,255,136,0.1), 0 0 20px rgba(0,255,136,0.1);
+        /* Main Container */
+        .container {
             position: relative;
-            backdrop-filter: blur(10px);
             z-index: 1;
+            width: 95%;
+            max-width: 550px;
+            padding: 10px;
+        }
+
+        /* Screen Styles */
+        .screen { 
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            padding: 35px 30px; 
+            border-radius: 30px; 
+            width: 100%;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
+        .screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--purple), var(--pink));
+            background-size: 200% 100%;
+            animation: gradientShift 3s linear infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
         .screen:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 30px 50px rgba(0,0,0,0.5), 0 0 0 2px rgba(0,255,136,0.3), 0 0 30px rgba(0,255,136,0.2);
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 
+                0 35px 60px rgba(0, 0, 0, 0.35),
+                0 0 0 2px rgba(255, 107, 107, 0.3);
         }
 
         .hidden { display: none !important; }
-        
+
+        /* Typography */
         h1 {
-            font-size: 2.2rem;
-            background: linear-gradient(135deg, #00ff88, #7000ff);
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--purple), var(--pink));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(168, 85, 247, 0.2);
         }
         
         h2 {
-            color: var(--primary);
-            font-size: 1.5rem;
+            color: var(--purple);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
         }
-        
+
+        h3 {
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin: 12px 0;
+        }
+
+        .subtitle {
+            color: #636e72;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .emoji-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Input Styles */
         .glass-input { 
-            padding: 14px 20px; 
-            border-radius: 60px; 
-            border: 1px solid rgba(0,255,136,0.3); 
-            background: rgba(0,0,0,0.5); 
-            color: white; 
+            padding: 16px 24px; 
+            border-radius: 50px; 
+            border: 3px solid transparent;
+            background: linear-gradient(#fff, #fff) padding-box,
+                        linear-gradient(135deg, var(--primary), var(--purple)) border-box;
+            color: var(--text-dark); 
             margin: 10px 0; 
-            width: 85%; 
-            font-size: 1rem;
+            width: 90%; 
+            font-size: 1.1rem;
+            font-family: 'Cairo', sans-serif;
             transition: all 0.3s;
             outline: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
         
         .glass-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0,255,136,0.3);
+            border: 3px solid transparent;
+            background: linear-gradient(#fff, #fff) padding-box,
+                        linear-gradient(135deg, var(--secondary), var(--success)) border-box;
+            box-shadow: 0 6px 25px rgba(78, 205, 196, 0.3);
             transform: scale(1.02);
         }
         
+        .glass-input::placeholder {
+            color: #b2bec3;
+        }
+
+        /* Button Styles */
         button { 
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #0a0a1a; 
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white; 
             border: none; 
-            padding: 12px 28px; 
-            border-radius: 60px; 
+            padding: 14px 32px; 
+            border-radius: 50px; 
             cursor: pointer; 
-            font-weight: bold; 
-            font-size: 1rem; 
-            transition: all 0.3s; 
-            margin: 5px;
+            font-weight: 700; 
+            font-size: 1.05rem; 
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+            margin: 8px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
         }
-        
-        button::after {
+
+        button::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.4s, height 0.4s;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
         }
-        
-        button:hover::after {
-            width: 200%;
-            height: 200%;
+
+        button:hover::before {
+            left: 100%;
         }
         
         button:hover { 
-            transform: scale(1.05); 
-            filter: brightness(1.1);
-            box-shadow: 0 5px 25px rgba(0,255,136,0.4);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.5);
         }
         
         button:active {
             transform: scale(0.98);
         }
-        
-        .timer-wrapper {
-            background: rgba(0,0,0,0.5);
-            border-radius: 60px;
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), var(--success));
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.5);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--orange), var(--danger));
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-small {
             padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Game UI Components */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+            padding: 12px 20px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .score-display span {
+            color: var(--accent);
+        }
+
+        .question-counter {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1rem;
+        }
+
+        /* Timer Component */
+        .timer-wrapper {
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+            border-radius: 25px;
+            padding: 15px 25px;
             margin: 15px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         
         .timer { 
-            font-size: 2rem; 
-            color: var(--primary); 
-            font-weight: bold; 
-            font-family: monospace;
-            text-shadow: 0 0 10px rgba(0,255,136,0.5);
+            font-size: 2.5rem; 
+            color: var(--accent); 
+            font-weight: 800; 
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 20px rgba(255, 230, 109, 0.5);
+            letter-spacing: 3px;
         }
         
-        .score-box { 
-            background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(112,0,255,0.1));
-            padding: 10px 15px; 
-            border-radius: 60px; 
+        .timer-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timer-label span:first-child {
             font-size: 0.9rem;
-            border: 1px solid rgba(0,255,136,0.3);
+            color: #a0a0a0;
+        }
+
+        .score-box { 
+            background: linear-gradient(135deg, var(--primary), var(--pink));
+            padding: 10px 18px; 
+            border-radius: 25px; 
+            font-size: 0.95rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            margin: 12px 0;
+            overflow: hidden;
         }
         
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 200% 100%;
+            animation: progressFlow 2s linear infinite;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        @keyframes progressFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Question Card */
+        .question-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        /* Answers Grid */
         .answers-grid { 
             display: grid; 
             gap: 12px; 
@@ -203,248 +402,650 @@
         }
         
         .ans-item { 
-            background: rgba(0,0,0,0.6); 
-            padding: 16px 20px; 
-            border-radius: 60px; 
-            border: 1px solid rgba(0,255,136,0.2); 
+            background: linear-gradient(135deg, #ffffff, #f1f3f5);
+            padding: 18px 22px;
+            border-radius: 20px; 
+            border: 3px solid transparent;
             display: flex; 
             justify-content: space-between; 
-            font-weight: bold;
-            transition: all 0.3s;
-            cursor: default;
+            align-items: center;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
+            overflow: hidden;
         }
-        
+
+        .ans-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--purple));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
         .ans-item:hover {
-            border-color: rgba(0,255,136,0.5);
-            transform: translateX(-5px);
+            transform: translateX(-5px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.2);
+        }
+
+        .ans-item:hover::before {
+            opacity: 1;
         }
         
         .ans-item.found { 
-            border-color: var(--primary); 
-            background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(112,0,255,0.1));
-            animation: glow 0.5s ease;
-            cursor: default;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-color: var(--success);
+            animation: revealPulse 0.6s ease;
         }
-        
-        @keyframes glow {
-            0% { box-shadow: 0 0 0 0 rgba(0,255,136,0.5); }
-            100% { box-shadow: 0 0 20px 5px rgba(0,255,136,0.2); }
+
+        .ans-item.found::before {
+            background: linear-gradient(180deg, var(--success), var(--secondary));
+            opacity: 1;
+        }
+
+        @keyframes revealPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
         
         .ans-number {
-            background: rgba(0,255,136,0.2);
-            width: 35px;
-            height: 35px;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            width: 38px;
+            height: 38px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            margin-left: 10px;
+            margin-left: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .ans-item.found .ans-number {
+            background: linear-gradient(135deg, var(--success), var(--secondary));
+        }
+
+        .ans-text {
+            display: flex;
+            align-items: center;
+            font-size: 1.05rem;
+            color: var(--text-dark);
         }
         
         .ans-value {
-            color: var(--gold);
-            font-weight: bold;
+            background: linear-gradient(135deg, var(--accent), var(--orange));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .ans-item.found .ans-value {
+            background: linear-gradient(135deg, var(--success), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        /* Input Group */
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            margin-bottom: 10px;
         }
         
+        .input-group input {
+            flex: 1;
+            padding: 16px 22px;
+            border-radius: 50px;
+            border: 3px solid transparent;
+            background: linear-gradient(#fff, #fff) padding-box,
+                        linear-gradient(135deg, var(--secondary), var(--blue)) border-box;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+            font-family: 'Cairo', sans-serif;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-group input:focus {
+            border: 3px solid transparent;
+            background: linear-gradient(#fff, #fff) padding-box,
+                        linear-gradient(135deg, var(--success), var(--secondary)) border-box;
+            box-shadow: 0 6px 25px rgba(78, 205, 196, 0.3);
+        }
+
+        /* Feedback Message */
+        .feedback-msg {
+            font-size: 0.95rem;
+            margin-top: 12px;
+            min-height: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .feedback-success {
+            color: var(--success);
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .feedback-error {
+            color: var(--danger);
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Player List */
         .player-list {
-            background: rgba(0,0,0,0.4);
-            border-radius: 24px;
-            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 25px;
+            padding: 18px;
             margin: 15px 0;
+        }
+
+        .player-list-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .player-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 15px;
-            margin: 8px 0;
-            background: rgba(0,255,136,0.05);
-            border-radius: 60px;
-            border: 1px solid rgba(0,255,136,0.2);
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 20px;
+            border: 2px solid transparent;
             transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .player-card:hover {
+            transform: translateX(-5px);
+            border-color: var(--secondary);
         }
         
         .player-card.you {
             border-color: var(--primary);
-            background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(112,0,255,0.05));
+            background: linear-gradient(135deg, #fff5f5, #ffe0e0);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
         }
-        
-        .rank-item { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 12px 18px; 
-            margin: 8px 0;
-            background: rgba(0,0,0,0.4);
-            border-radius: 60px;
-            transition: all 0.3s;
+
+        .player-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--text-dark);
         }
-        
-        .rank-item:hover {
-            transform: translateX(-5px);
-            background: rgba(0,255,136,0.1);
+
+        .player-score {
+            color: var(--primary);
+            font-weight: 700;
         }
-        
-        .winner-name { 
-            background: linear-gradient(135deg, var(--primary), var(--gold));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-size: 2rem; 
-            margin: 15px 0; 
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            width: 0%;
-            transition: width 0.3s linear;
-        }
-        
+
+        /* Room Code Box */
         .room-code-box {
-            background: rgba(0,0,0,0.5);
-            padding: 15px;
-            border-radius: 20px;
-            margin: 10px 0;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+            padding: 25px;
+            border-radius: 25px;
+            margin: 15px 0;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .room-code-label {
+            color: #a0a0a0;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
         }
         
         .room-code {
-            font-size: 2rem;
-            letter-spacing: 8px;
-            font-family: monospace;
-            color: var(--primary);
-            font-weight: bold;
+            font-size: 2.5rem;
+            letter-spacing: 12px;
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, var(--accent), var(--orange));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        /* Rankings */
+        .rank-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 16px 22px; 
+            margin: 10px 0;
+            background: white;
+            border-radius: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
+        .rank-item:hover {
+            transform: translateX(-5px) scale(1.02);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .rank-item:first-child {
+            background: linear-gradient(135deg, #fff9e6, #fff3cc);
+            border: 2px solid var(--gold);
+        }
+
+        .rank-item:nth-child(2) {
+            background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+            border: 2px solid var(--silver);
+        }
+
+        .rank-item:nth-child(3) {
+            background: linear-gradient(135deg, #fff5eb, #ffe8d6);
+            border: 2px solid var(--bronze);
+        }
+
+        .rank-name {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+        }
+
+        .rank-score {
+            color: var(--success);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        /* Winner Section */
+        .winner-section {
+            padding: 25px;
+            background: linear-gradient(135deg, #fff9e6, #fff3cc);
+            border-radius: 25px;
+            margin: 20px 0;
+            border: 3px solid var(--gold);
+        }
+
+        .winner-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .winner-name { 
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 10px 0; 
+        }
+
+        .winner-label {
+            font-size: 1rem;
+            color: var(--text-dark);
+            opacity: 0.7;
+        }
+
+        /* Notification */
         .notification {
             position: fixed;
-            bottom: 30px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #0a0a1a;
-            padding: 12px 24px;
-            border-radius: 60px;
-            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
             z-index: 1000;
-            animation: slideUp 3s ease forwards;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: slideDown 3s ease forwards;
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.4);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger), var(--orange));
+            box-shadow: 0 8px 30px rgba(225, 112, 85, 0.4);
         }
         
-        @keyframes slideUp {
-            0% { opacity: 0; transform: translateX(-50%) translateY(50px); }
+        .notification.success {
+            background: linear-gradient(135deg, var(--success), var(--secondary));
+            box-shadow: 0 8px 30px rgba(0, 184, 148, 0.4);
+        }
+        
+        @keyframes slideDown {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
             15% { opacity: 1; transform: translateX(-50%) translateY(0); }
             85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            100% { opacity: 0; transform: translateX(-50%) translateY(50px); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
         }
-        
-        .input-group {
-            display: flex;
-            gap: 10px;
+
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall 3s linear forwards;
+            z-index: 1000;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .screen {
+                padding: 25px 20px;
+                border-radius: 25px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .glass-input {
+                padding: 14px 18px;
+                font-size: 0.95rem;
+            }
+
+            button {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+            }
+
+            .room-code {
+                font-size: 2rem;
+                letter-spacing: 8px;
+            }
+
+            .timer {
+                font-size: 2rem;
+            }
+
+            .question-text {
+                font-size: 1.2rem;
+            }
+
+            .ans-item {
+                padding: 14px 16px;
+            }
+
+            .ans-number {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+
+            .ans-text {
+                font-size: 0.95rem;
+            }
+
+            .ans-value {
+                font-size: 1rem;
+            }
+        }
+
+        /* Additional Animations */
+        .float-animation {
+            animation: floatUpDown 3s ease-in-out infinite;
+        }
+
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .spin-animation {
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* New Game Button Styling */
+        .new-game-btn {
+            background: linear-gradient(135deg, var(--success), var(--secondary));
             margin-top: 15px;
         }
-        
-        .input-group input {
-            flex: 1;
-            padding: 14px 20px;
-            border-radius: 60px;
-            border: 1px solid rgba(0,255,136,0.3);
-            background: rgba(0,0,0,0.5);
+
+        /* Leave Room Button */
+        .leave-btn {
+            background: linear-gradient(135deg, #636e72, #b2bec3);
+            box-shadow: 0 4px 15px rgba(99, 110, 114, 0.4);
+        }
+
+        /* Waiting Message */
+        .waiting-msg {
+            color: var(--purple);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .waiting-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .waiting-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--purple);
+            border-radius: 50%;
+            animation: dotBounce 1.4s infinite;
+        }
+
+        .waiting-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .waiting-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dotBounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Start Button */
+        .start-btn {
+            background: linear-gradient(135deg, var(--success), var(--secondary));
+            font-size: 1.2rem;
+            padding: 16px 40px;
+        }
+
+        /* Info Section */
+        .info-section {
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
+            padding: 15px 20px;
+            border-radius: 20px;
+            margin-top: 15px;
             color: white;
-            font-size: 1rem;
-            outline: none;
         }
-        
-        .input-group input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(0,255,136,0.3);
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 0.9rem;
         }
-        
-        .feedback-msg {
-            font-size: 0.8rem;
-            margin-top: 10px;
-            color: var(--primary);
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #b2bec3;
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dfe6e9, transparent);
+        }
+
+        .divider span {
+            padding: 0 15px;
         }
     </style>
 </head>
 <body>
 
-<div class="stars" id="stars"></div>
-<div class="grid-3d"></div>
+<div class="particles" id="particles"></div>
+<div class="bubbles-container" id="bubbles"></div>
 
 <div class="container">
+    <!-- Login Screen -->
     <div id="loginScreen" class="screen">
-        <h1>🎯 توقع الجمهور</h1>
-        <p style="color: #888; margin-bottom: 20px;">غرف من 2 إلى 4 لاعبين • أكثر من 200 سؤال متنوع</p>
-        <input type="text" id="userName" class="glass-input" placeholder="اسمك" maxlength="15">
+        <span class="emoji-icon">🎯</span>
+        <h1>توقع الجمهور</h1>
+        <p class="subtitle">🌟 تحدي الأصوات - لعبة جماعية ممتعة</p>
+        
+        <input type="text" id="userName" class="glass-input" placeholder="👤 اكتب اسمك هنا" maxlength="15">
+        
         <div>
-            <button onclick="createRoom()">✨ إنشاء غرفة</button>
+            <button class="btn-secondary" onclick="createRoom()">✨ إنشاء غرفة جديدة</button>
         </div>
-        <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-            <input type="text" id="roomInput" class="glass-input" placeholder="رمز الغرفة" maxlength="4" style="width: 120px;">
+
+        <div class="divider"><span>أو</span></div>
+
+        <div style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="roomInput" class="glass-input" placeholder="🔢 الرمز" maxlength="4" style="width: 130px;">
             <button onclick="joinRoom()">🚪 انضمام</button>
         </div>
-        <div style="margin-top: 20px; font-size: 0.7rem; opacity: 0.6;">
-            💡 أكثر من 200 سؤال متنوع | كل سؤال له إجابات مخفية | كل لاعب يرى إجاباته الخاصة
+
+        <div class="info-section">
+            <div class="info-item">👥 2 إلى 4 لاعبين</div>
+            <div class="info-item">❓ 4 أسئلة متنوعة</div>
+            <div class="info-item">⏱️ 45 ثانية لكل سؤال</div>
+            <div class="info-item">🎯 percentages %</div>
         </div>
     </div>
 
+    <!-- Waiting Screen -->
     <div id="waitingScreen" class="screen hidden">
-        <h2>🆔 رمز الغرفة</h2>
+        <span class="emoji-icon">🆔</span>
+        <h2>رمز الغرفة</h2>
         <div class="room-code-box">
+            <div class="room-code-label">شارك هذا الرمز مع أصدقائك</div>
             <div class="room-code" id="roomCode">----</div>
         </div>
         <div class="progress-bar">
             <div class="progress-fill" id="waitingProgress"></div>
         </div>
         <div class="player-list">
+            <div class="player-list-title">👥 اللاعبون</div>
             <div id="playerList"></div>
         </div>
-        <div id="waitingMsg" style="color: var(--primary); margin: 10px 0;">⏳ انتظار لاعبين...</div>
-        <button id="startBtn" class="hidden" onclick="startGame()">▶ بدء اللعبة</button>
-        <button onclick="leaveRoom()" style="background: rgba(255,255,255,0.1);">🚪 مغادرة</button>
+        <div class="waiting-msg" id="waitingMsg">
+            <span>⏳ انتظار اللاعبين</span>
+            <div class="waiting-dots">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <button id="startBtn" class="start-btn hidden" onclick="startGame()">▶️ ابدأ اللعبة</button>
+        <button class="leave-btn btn-small" onclick="leaveRoom()">🚪 مغادرة</button>
     </div>
 
+    <!-- Game Screen -->
     <div id="gameScreen" class="screen hidden">
+        <div class="stats-bar">
+            <div class="score-display">
+                🎯 <span id="myScoreDisplay">0</span> نقطة
+            </div>
+            <div class="score-box">
+                سؤال <span id="qCount">1</span>/<span id="totalQ">4</span>
+            </div>
+        </div>
+
         <div class="timer-wrapper">
-            <span>⏱️ المؤقت</span>
-            <span class="timer" id="timeLeft">45</span>
+            <div class="timer-label">
+                <span>⏱️ الوقت</span>
+                <span style="font-size: 0.85rem; color: #888;">المتبقي</span>
+            </div>
+            <div class="timer" id="timeLeftDisplay">45</div>
         </div>
-        <div class="score-box">
-            🎯 <span id="myScoreDisplay">0</span> نقطة | السؤال <span id="qCount">1</span>/<span id="totalQ">4</span>
-        </div>
+
         <div class="progress-bar">
             <div class="progress-fill" id="questionProgress"></div>
         </div>
-        <h3 id="questionText" style="margin: 15px 0; font-size: 1.2rem;">جاري التحميل...</h3>
-        <div id="answersBoard" class="answers-grid"></div>
-        <div class="input-group">
-            <input type="text" id="guessInput" placeholder="اكتب إجابتك هنا..." autocomplete="off">
-            <button onclick="submitGuess()">إرسال</button>
+
+        <div class="question-card">
+            <div class="question-text" id="questionText">⏳ جاري التحميل...</div>
         </div>
+
+        <div id="answersBoard" class="answers-grid"></div>
+
+        <div class="input-group">
+            <input type="text" id="guessInput" placeholder="✏️ اكتب إجابتك هنا..." autocomplete="off">
+            <button class="btn-secondary" onclick="submitGuess()">📤 إرسال</button>
+        </div>
+
         <div class="feedback-msg" id="feedbackMsg"></div>
     </div>
 
+    <!-- Result Screen -->
     <div id="resultScreen" class="screen hidden">
-        <h1>🏁 نهاية اللعبة</h1>
-        <div class="winner-name" id="winnerName">...</div>
+        <div class="winner-section">
+            <div class="winner-icon">🏆</div>
+            <div class="winner-label">الفائز</div>
+            <div class="winner-name" id="winnerName">...</div>
+        </div>
+        
+        <h2 style="margin-top: 20px;">📊 الترتيب النهائي</h2>
         <div id="rankings"></div>
-        <button onclick="location.reload()">🎮 لعبة جديدة</button>
+        
+        <button class="new-game-btn" onclick="location.reload()">🎮 العب مرة أخرى</button>
     </div>
 </div>
 
 <script>
+// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyCTKYD680Jdbl0azC9RTtuKZBaLX2uU_Ck",
     authDomain: "my-online-store-34f34.firebaseapp.com",
@@ -458,32 +1059,105 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// Game State
 let myId = Math.random().toString(36).substr(2, 9);
 let myName = "";
 let currentRoom = "";
 let isHost = false;
 let timerInterval;
+let lastTimerSecond = -1;
+let soundEnabled = true;
 
-// إنشاء النجوم
-function createStars() {
-    const starsContainer = document.getElementById('stars');
-    for(let i = 0; i < 100; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        star.style.width = (Math.random() * 3 + 1) + 'px';
-        star.style.height = star.style.width;
-        star.style.animationDelay = Math.random() * 3 + 's';
-        star.style.animationDuration = (Math.random() * 2 + 1) + 's';
-        starsContainer.appendChild(star);
+// Create Animated Particles
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    for(let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.width = (Math.random() * 15 + 5) + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.background = `linear-gradient(135deg, 
+            ${['#ff6b6b', '#4ecdc4', '#ffe66d', '#a855f7', '#ec4899'][Math.floor(Math.random() * 5)]}, 
+            ${['#ff8787', '#6ee7de', '#fff09d', '#c084fc', '#f472b6'][Math.floor(Math.random() * 5)]})`;
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        particlesContainer.appendChild(particle);
     }
 }
-createStars();
 
-// ========== 200+ سؤال متنوع ==========
+// Create Floating Bubbles
+function createBubbles() {
+    const bubblesContainer = document.getElementById('bubbles');
+    for(let i = 0; i < 20; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.style.left = Math.random() * 100 + '%';
+        bubble.style.width = (Math.random() * 40 + 20) + 'px';
+        bubble.style.height = bubble.style.width;
+        bubble.style.animationDelay = Math.random() * 8 + 's';
+        bubble.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        bubblesContainer.appendChild(bubble);
+    }
+}
+
+// Audio Functions
+function playBeep(frequency = 880, duration = 0.3, volume = 0.3) {
+    if (!soundEnabled) return;
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.frequency.value = frequency;
+        gainNode.gain.value = volume;
+        oscillator.type = 'sine';
+        oscillator.start();
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+        oscillator.stop(audioCtx.currentTime + duration);
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+    } catch(e) { console.log("audio error", e); }
+}
+
+function playTickSound() {
+    playBeep(660, 0.12, 0.15);
+}
+
+function playWarningBeep() {
+    playBeep(880, 0.25, 0.35);
+}
+
+function playTimeoutAlarm() {
+    playBeep(550, 0.6, 0.45);
+    setTimeout(() => playBeep(440, 0.5, 0.4), 200);
+}
+
+function playSuccessSound() {
+    playBeep(523, 0.15, 0.3);
+    setTimeout(() => playBeep(659, 0.15, 0.3), 100);
+    setTimeout(() => playBeep(784, 0.2, 0.35), 200);
+}
+
+// Confetti Effect
+function createConfetti() {
+    const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a855f7', '#ec4899', '#ffd700', '#00b894'];
+    for(let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        confetti.style.width = (Math.random() * 10 + 5) + 'px';
+        confetti.style.height = (Math.random() * 10 + 5) + 'px';
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3500);
+    }
+}
+
+// Questions Database
 const allQuestions = [
-    // الأكل والشراب
     {q: "☕ شيء يشربه الناس في الصباح", a: {"قهوة": 45, "شاي": 25, "حليب": 20, "ماء": 10}},
     {q: "🍕 الأكلة المفضلة لدى الشباب", a: {"بيتزا": 50, "برجر": 30, "معكرونة": 12, "شاورما": 8}},
     {q: "🍎 فاكهة صحية", a: {"تفاح": 40, "موز": 30, "برتقال": 20, "فراولة": 10}},
@@ -494,8 +1168,6 @@ const allQuestions = [
     {q: "🍜 شوربة مشهورة", a: {"عدس": 50, "خضار": 25, "دجاج": 15, "طماطم": 10}},
     {q: "🥗 سلطة أساسية", a: {"خس": 40, "طماطم": 35, "خيار": 20, "جزر": 5}},
     {q: "🍳 شيء يقدم مع البيض", a: {"خبز": 50, "جبن": 25, "زيتون": 15, "طماطم": 10}},
-    
-    // الحيوانات
     {q: "🐱 حيوان أليف مفضل", a: {"قط": 45, "كلب": 40, "سمك": 10, "هامستر": 5}},
     {q: "🦁 حيوان مفترس", a: {"أسد": 50, "نمر": 25, "ذئب": 15, "تمساح": 10}},
     {q: "🐘 حيوان ضخم", a: {"فيل": 60, "زرافة": 20, "فرس النهر": 12, "وحيد القرن": 8}},
@@ -504,54 +1176,38 @@ const allQuestions = [
     {q: "🐎 حيوان يستخدم للركوب", a: {"حصان": 60, "جمل": 25, "حمار": 10, "بغل": 5}},
     {q: "🐍 حيوان زاحف", a: {"ثعبان": 55, "سحلية": 20, "تمساح": 15, "سلحفاة": 10}},
     {q: "🐝 حشرة تنتج العسل", a: {"نحل": 80, "نمل": 10, "ذباب": 5, "دبور": 5}},
-    
-    // الرياضة
     {q: "⚽ رياضة جماعية", a: {"كرة قدم": 55, "كرة سلة": 20, "كرة طائرة": 15, "يد": 10}},
     {q: "🏊 رياضة مائية", a: {"سباحة": 60, "غطس": 20, "تجديف": 12, "ركوب أمواج": 8}},
     {q: "🎾 رياضة بالمضرب", a: {"تنس": 50, "ريشة طائرة": 30, "اسكواش": 15, "بينغ بونغ": 5}},
     {q: "🥊 رياضة قتالية", a: {"ملاكمة": 45, "كاراتيه": 30, "جودو": 15, "تاي بوكس": 10}},
     {q: "🏃 رياضة جري", a: {"عدو": 50, "ماراثون": 25, "سباق": 15, "هرولة": 10}},
     {q: "🏋️ رياضة ألعاب قوة", a: {"رفع أثقال": 55, "كمال أجسام": 30, "مصارعة": 10, "جوجيتسو": 5}},
-    
-    // التكنولوجيا
     {q: "📱 تطبيق تواصل اجتماعي", a: {"واتساب": 45, "فيسبوك": 25, "انستغرام": 20, "تيك توك": 10}},
     {q: "💻 نظام تشغيل مشهور", a: {"ويندوز": 55, "ماك": 20, "لينكس": 15, "أندرويد": 10}},
     {q: "🎮 لعبة فيديو مشهورة", a: {"فورتنايت": 35, "ماين كرافت": 30, "ببجي": 20, "كول أوف ديوتي": 15}},
-    {q: "🔍 محرك بحث", a: {"جوجل": 80, "بينج": 10, "ياهو": 5, "دك دك غو": 5}},
+    {q: "🔍 محرك بحث", a: {"جوجل": 80, "بينج": 10, "雅虎": 5, "دك دك غو": 5}},
     {q: "📧 وسيلة تواصل", a: {"بريد إلكتروني": 50, "رسالة": 30, "مكالمة": 15, "فيديو": 5}},
-    
-    // المدرسة والتعليم
     {q: "📚 مادة دراسية", a: {"رياضيات": 40, "عربي": 25, "علوم": 20, "تاريخ": 15}},
     {q: "✏️ أداة كتابة", a: {"قلم": 55, "رصاص": 25, "حبر": 12, "لوح": 8}},
     {q: "🏫 مكان الدراسة", a: {"مدرسة": 60, "جامعة": 25, "معهد": 10, "بيت": 5}},
     {q: "🎓 شهادة جامعية", a: {"بكالوريوس": 50, "ماجستير": 30, "دكتوراه": 15, "دبلوم": 5}},
     {q: "📖 شيء تقرأه", a: {"كتاب": 55, "جريدة": 20, "مجلة": 15, "رواية": 10}},
-    
-    // المنزل والعائلة
     {q: "🏠 غرفة في المنزل", a: {"نوم": 40, "جلوس": 30, "مطبخ": 20, "حمام": 10}},
     {q: "🛋️ أثاث منزلي", a: {"كنبة": 40, "طاولة": 25, "كرسي": 20, "خزانة": 15}},
     {q: "🍳 جهاز في المطبخ", a: {"ثلاجة": 35, "فرن": 30, "غسالة": 20, "خلاط": 15}},
     {q: "🧹 أداة تنظيف", a: {"مكنسة": 45, "ممسحة": 25, "خرقة": 20, "فرشاة": 10}},
-    
-    // الصحة والجمال
     {q: "💊 دواء شائع", a: {"بانادول": 50, "اسبرين": 25, "مضاد حيوي": 15, "فيتامين": 10}},
     {q: "🏥 مكان العلاج", a: {"مستشفى": 55, "عيادة": 30, "صيدلية": 10, "بيت": 5}},
     {q: "🦷 طبيب متخصص", a: {"أسنان": 40, "عيون": 30, "جلدية": 20, "قلب": 10}},
-    {q: "💄 مادة تجميل", a: {"أحمر شفاه": 35, "كحل": 30, "ظافر": 20, "بودرة": 15}},
-    
-    // السفر والطبيعة
+    {q: "💄 مادة تجميل", a: {"أحمر شفاه": 35, "كحل": 30, "ظفر": 20, "بودرة": 15}},
     {q: "✈️ وسيلة سفر", a: {"طائرة": 45, "سيارة": 35, "قطار": 12, "باص": 8}},
     {q: "🌊 منظر طبيعي", a: {"بحر": 45, "جبل": 30, "غابة": 15, "صحراء": 10}},
     {q: "🏝️ مكان سياحي", a: {"شاطئ": 50, "مدينة": 25, "متحف": 15, "منتزه": 10}},
     {q: "🌡️ ظاهرة جوية", a: {"مطر": 45, "شمس": 30, "ريح": 15, "ثلج": 10}},
-    
-    // الفن والترفيه
-    {q: "🎬 فيلم شهير", a: {"تايتانيك": 30, "افاتار": 25, "الملك الأسد": 25, "هاري بوتر": 20}},
+    {q: "🎬 فيلم شهير", a: {"تايتانيك": 30, "افاتار": 25, "الملك الأسود": 25, "هاري بوتر": 20}},
     {q: "🎵 آلة موسيقية", a: {"جيتار": 40, "بيانو": 30, "كمان": 20, "طبلة": 10}},
     {q: "🎨 لون أساسي", a: {"أحمر": 40, "أزرق": 35, "أصفر": 15, "أخضر": 10}},
     {q: "📺 برنامج تلفزيوني", a: {"مسلسل": 45, "أخبار": 25, "رياضة": 20, "كارتون": 10}},
-    
-    // أكثر
     {q: "💰 عملة معروفة", a: {"دولار": 50, "يورو": 25, "ريال": 15, "دينار": 10}},
     {q: "🎁 مناسبة للهدايا", a: {"عيد": 40, "زواج": 30, "ميلاد": 20, "نجاح": 10}},
     {q: "⏰ وقت من اليوم", a: {"صباح": 40, "مساء": 35, "ليل": 15, "ظهر": 10}},
@@ -571,10 +1227,44 @@ const allQuestions = [
     {q: "🎭 مهنة فنية", a: {"ممثل": 45, "مغني": 30, "رسام": 15, "كاتب": 10}},
     {q: "⚙️ حرفة يدوية", a: {"نجارة": 40, "حدادة": 30, "خياطة": 20, "بناء": 10}},
     {q: "🌱 نبات منزلي", a: {"صبار": 45, "ورد": 30, "نخيل": 15, "ريحان": 10}},
-    {q: "🪑 قطعة أثاث", a: {"طاولة": 35, "كرسي": 30, "سرير": 25, "خزانة": 10}},
+    {q: "🚗 شيء تجده في السيارة", a: {"مقود": 40, "كرسي": 30, "مرآة": 20, "راديو": 10}},
+    {q: "🍔 شيء تأكله بسرعة", a: {"برجر": 45, "بيتزا": 30, "شاورما": 15, "سندويتش": 10}},
+    {q: "🏫 شيء يوجد في المدرسة", a: {"سبورة": 40, "طاولة": 30, "كرسي": 20, "كتاب": 10}},
+    {q: "📱 شيء لا تستطيع العيش بدونه", a: {"هاتف": 50, "انترنت": 30, "مال": 15, "عائلة": 5}},
+    {q: "🎮 شيء يفعله الشباب في وقت الفراغ", a: {"ألعاب": 40, "خروج": 30, "مشاهدة": 20, "نوم": 10}},
+    {q: "🍹 مشروب في الصيف", a: {"عصير": 45, "ماء": 30, "مشروب غازي": 15, "شاي بارد": 10}},
+    {q: "🔥 شيء حار", a: {"نار": 50, "شمس": 25, "شاي": 15, "طعام": 10}},
+    {q: "❄️ شيء بارد", a: {"ثلج": 45, "ماء": 30, "آيس كريم": 15, "عصير": 10}},
+    {q: "🏃‍♂️ شيء يساعد على الصحة", a: {"رياضة": 50, "ماء": 20, "نوم": 20, "أكل صحي": 10}},
+    {q: "🎒 شيء تحمله معك يوميًا", a: {"هاتف": 40, "مفاتيح": 30, "محفظة": 20, "حقيبة": 10}},
+    {q: "📺 شيء تشاهده في التلفاز", a: {"مسلسلات": 40, "أفلام": 30, "أخبار": 20, "كرتون": 10}},
+    {q: "🧑‍🍳 شيء في المطبخ", a: {"سكين": 40, "ملعقة": 30, "قدر": 20, "فرن": 10}},
+    {q: "🎧 شيء تسمعه", a: {"موسيقى": 45, "أخبار": 25, "بودكاست": 20, "راديو": 10}},
+    {q: "🛏️ شيء في غرفة النوم", a: {"سرير": 50, "وسادة": 25, "غطاء": 15, "خزانة": 10}},
+    {q: "💡 شيء يضيء", a: {"مصباح": 50, "شمس": 25, "شمعة": 15, "كهرباء": 10}},
+    {q: "📚 شيء تستخدمه للدراسة", a: {"كتاب": 40, "قلم": 30, "دفتر": 20, "حاسوب": 10}},
+    {q: "🚿 شيء في الحمام", a: {"دش": 40, "صابون": 30, "منشفة": 20, "مرآة": 10}},
+    {q: "🍿 شيء تأكله في السينما", a: {"فشار": 60, "شوكولاتة": 20, "مشروب": 15, "حلوى": 5}},
+    {q: "⏳ شيء يمر بسرعة", a: {"وقت": 50, "عطلة": 25, "عمر": 15, "يوم": 10}},
+    {q: "📦 شيء يمكن شحنه", a: {"طرد": 50, "هاتف": 20, "بطارية": 20, "جهاز": 10}},
+    {q: "🚪 شيء تفتحه", a: {"باب": 50, "نافذة": 25, "علبة": 15, "هاتف": 10}},
+    {q: "🔒 شيء تغلقه", a: {"باب": 45, "قفل": 30, "هاتف": 15, "خزانة": 10}},
+    {q: "🎉 شيء في الحفلات", a: {"موسيقى": 40, "رقص": 30, "طعام": 20, "أصدقاء": 10}},
+    {q: "📸 شيء تلتقطه بالكاميرا", a: {"صورة": 50, "فيديو": 30, "منظر": 10, "ناس": 10}},
+    {q: "🏖️ شيء تفعله في البحر", a: {"سباحة": 50, "استرخاء": 20, "لعب": 20, "تصوير": 10}},
+    {q: "🛒 شيء تشتريه من السوق", a: {"طعام": 40, "ملابس": 30, "خضار": 20, "أدوات": 10}},
+    {q: "⌚ شيء يدل على الوقت", a: {"ساعة": 60, "هاتف": 25, "منبه": 10, "شمس": 5}},
+    {q: "🎓 شيء تفعله بعد الدراسة", a: {"عمل": 40, "راحة": 30, "سفر": 20, "تعلم": 10}},
+    {q: "📦 شيء يوجد في المنزل", a: {"أثاث": 40, "تلفاز": 30, "ثلاجة": 20, "ألعاب": 10}},
+    {q: "🌙 شيء تفعله في الليل", a: {"نوم": 50, "هاتف": 20, "مشاهدة": 20, "دراسة": 10}},
 ];
 
-// دالة لجلب أسئلة عشوائية (4 أسئلة لكل لعبة)
+// Initialize particles and bubbles
+createParticles();
+createBubbles();
+
+let currentGameQuestions = [];
+
 function getRandomQuestions(count) {
     const shuffled = [...allQuestions];
     for(let i = shuffled.length - 1; i > 0; i--) {
@@ -584,224 +1274,173 @@ function getRandomQuestions(count) {
     return shuffled.slice(0, count);
 }
 
-// الأسئلة المستخدمة في اللعبة الحالية
-let currentGameQuestions = [];
-
-// دالة مقارنة ذكية للإجابات
+// Answer Matching Function
 function isMatchingAnswer(userAnswer, correctAnswer) {
     const u = userAnswer.toLowerCase().trim();
     const c = correctAnswer.toLowerCase().trim();
-    
-    // مقارنة مباشرة
     if (u === c) return true;
-    
-    // إزالة "ال" من البداية
     const uWithoutAl = u.replace(/^ال/, '');
     const cWithoutAl = c.replace(/^ال/, '');
     if (uWithoutAl === cWithoutAl) return true;
-    
-    // إزالة التاء المربوطة
     if (uWithoutAl.replace(/ه$/, '') === cWithoutAl.replace(/ه$/, '')) return true;
-    
-    // مرادفات شائعة
     const synonyms = {
-        "قهوة": ["قهوي", "qahwa", "coffee"],
-        "شاي": ["شاى", "te", "tea"],
-        "ماء": ["ماي", "ووتر", "water"],
-        "بيتزا": ["بيتزا", "pizza"],
-        "برجر": ["برغر", "همبرجر", "burger"],
-        "تفاح": ["تفاحة", "apple"],
-        "موز": ["موزة", "banana"],
-        "قط": ["قطة", "بس", "بسة", "cat"],
-        "كلب": ["كلبة", "دوج", "dog"],
-        "أسد": ["سبع", "ليث", "lion"],
-        "فيل": ["فيلة", "elephant"],
-        "حصان": ["فرس", "horse"],
-        "جمل": ["بعير", "camel"],
-        "ثعبان": ["حية", "snake"],
-        "نحل": ["نحلة", "bee"],
-        "كرة قدم": ["سوكر", "football"],
-        "سباحة": ["سويما", "swim"],
-        "واتساب": ["واتس", "whatsapp"],
-        "فيسبوك": ["فيس", "facebook"],
-        "قلم": ["قل", "pen"],
-        "كتاب": ["كيتاب", "book"],
-        "بيت": ["منزل", "دار", "house"],
-        "مفتاح": ["مفتح", "مفاتيح", "key"]
+        "قهوة": ["قهوي","coffee"], "شاي": ["شاى","tea"], "بيتزا":["pizza"], "برجر":["برغر"], 
+        "قط":["قطة","بسب"], "كلب":["كلبة"], "أسد":["سبع"], "فيل":["فيلة"], "ثعبان":["حية"]
     };
-    
-    for(let key in synonyms) {
-        if(c === key && synonyms[key].includes(u)) return true;
-        if(u === key && synonyms[key].includes(c)) return true;
-    }
-    
-    // حساب التشابه بين النصوص (Levenshtein distance)
-    function getSimilarity(a, b) {
-        if(a.length === 0 || b.length === 0) return 0;
-        let longer = a.length > b.length ? a : b;
-        let shorter = a.length > b.length ? b : a;
-        if(longer.indexOf(shorter) !== -1) return 0.8;
-        let matches = 0;
-        for(let i = 0; i < shorter.length; i++) {
-            if(longer.includes(shorter[i])) matches++;
-        }
-        return matches / longer.length;
-    }
-    
-    const similarity = getSimilarity(uWithoutAl, cWithoutAl);
-    if(similarity > 0.7) return true;
-    
+    for(let key in synonyms) if(c === key && synonyms[key].includes(u)) return true;
     return false;
 }
 
-function showNotification(msg, isSuccess = true) {
+// Notification Function
+function showNotification(msg, type = "success") {
     const notif = document.createElement('div');
-    notif.className = 'notification';
+    notif.className = `notification ${type}`;
     notif.textContent = msg;
-    notif.style.background = isSuccess ? 'linear-gradient(135deg, #00ff88, #7000ff)' : 'linear-gradient(135deg, #ff3366, #cc1144)';
-    notif.style.color = 'white';
     document.body.appendChild(notif);
-    setTimeout(() => notif.remove(), 2500);
+    setTimeout(() => notif.remove(), 3000);
 }
 
+// Screen Navigation
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+}
+
+// Create Room
 function createRoom() {
     myName = document.getElementById('userName').value.trim();
-    if(!myName) {
-        showNotification("✏️ اكتب اسمك أولاً!", false);
-        return;
+    if(!myName) { 
+        showNotification("✏️ اكتب اسمك أولاً!", "error"); 
+        return; 
     }
     currentRoom = Math.floor(1000 + Math.random() * 9000).toString();
     isHost = true;
-    
-    db.ref('rooms/' + currentRoom).set({
-        status: 'waiting',
-        qIndex: 0,
-        players: { [myId]: { name: myName, score: 0, found: [] } },
-        timer: 45,
-        questions: null  // سيتم تعيين الأسئلة عند بدء اللعبة
-    }).then(() => {
-        showScreen('waitingScreen');
-        document.getElementById('roomCode').innerText = currentRoom;
-        listenToRoom();
-        showNotification(`✅ تم إنشاء الغرفة! الرمز: ${currentRoom}`);
-    }).catch(() => showNotification("خطأ في الاتصال!", false));
+    db.ref('rooms/' + currentRoom).set({ 
+        status: 'waiting', 
+        qIndex: 0, 
+        players: { [myId]: { name: myName, score: 0, found: [] } }, 
+        timer: 45, 
+        questions: null 
+    })
+    .then(() => { 
+        showScreen('waitingScreen'); 
+        document.getElementById('roomCode').innerText = currentRoom; 
+        listenToRoom(); 
+        showNotification(`✅ تم إنشاء الغرفة! الرمز: ${currentRoom}`); 
+    })
+    .catch(() => showNotification("❌ خطأ في الاتصال!", "error"));
 }
 
+// Join Room
 function joinRoom() {
     myName = document.getElementById('userName').value.trim();
     const rCode = document.getElementById('roomInput').value.trim();
-    if(!myName || rCode.length !== 4) {
-        showNotification("تأكد من الاسم ورمز الغرفة!", false);
-        return;
+    if(!myName || rCode.length !== 4) { 
+        showNotification("⚠️ تأكد من الاسم ورمز الغرفة!", "error"); 
+        return; 
     }
-
     db.ref('rooms/' + rCode).once('value', snap => {
         if(snap.exists()) {
-            const data = snap.val();
-            if(Object.keys(data.players).length >= 4) {
-                showNotification("الغرفة ممتلئة (4/4)!", false);
-                return;
+            if(Object.keys(snap.val().players).length >= 4) { 
+                showNotification("❌ الغرفة ممتلئة (4/4)!", "error"); 
+                return; 
             }
             currentRoom = rCode;
             db.ref('rooms/' + currentRoom + '/players/' + myId).set({ name: myName, score: 0, found: [] });
-            showScreen('waitingScreen');
-            document.getElementById('roomCode').innerText = currentRoom;
+            showScreen('waitingScreen'); 
+            document.getElementById('roomCode').innerText = currentRoom; 
             listenToRoom();
             showNotification(`✅ انضممت إلى الغرفة ${rCode}`);
         } else { 
-            showNotification("❌ الغرفة غير موجودة!", false);
+            showNotification("❌ الغرفة غير موجودة!", "error"); 
         }
     });
 }
 
+// Listen to Room Updates
 function listenToRoom() {
     db.ref('rooms/' + currentRoom).on('value', snap => {
         const data = snap.val();
         if(!data) return;
-
         const players = data.players;
         const playerCount = Object.keys(players).length;
-        
         const pList = document.getElementById('playerList');
         pList.innerHTML = "";
         for(let id in players) {
-            const isYou = (id === myId);
+            const isYou = id === myId;
             pList.innerHTML += `
                 <div class="player-card ${isYou ? 'you' : ''}">
-                    <span>${isYou ? '👤' : '👥'} ${players[id].name}</span>
-                    <span>${players[id].score} نقاط</span>
-                </div>
-            `;
+                    <div class="player-name">
+                        ${isYou ? '👤' : '👥'} ${players[id].name}
+                    </div>
+                    <div class="player-score">⭐ ${players[id].score}</div>
+                </div>`;
         }
-        
-        const progressPercent = (playerCount / 4) * 100;
-        document.getElementById('waitingProgress').style.width = progressPercent + '%';
-        
-        if(isHost && playerCount >= 2) {
-            document.getElementById('startBtn').classList.remove('hidden');
+        document.getElementById('waitingProgress').style.width = (playerCount / 4) * 100 + '%';
+        if(isHost && playerCount >= 2) { 
+            document.getElementById('startBtn').classList.remove('hidden'); 
             document.getElementById('waitingMsg').innerHTML = "✅ جاهز! اضغط بدء اللعبة";
-        } else if(isHost) {
-            document.getElementById('waitingMsg').innerHTML = "⏳ انتظر لاعبين آخرين (2 على الأقل)";
         }
-
-        if(data.status === 'playing') {
-            if(document.getElementById('gameScreen').classList.contains('hidden')) {
-                showScreen('gameScreen');
-            }
-            updateGameUI(data);
+        if(data.status === 'playing' && document.getElementById('gameScreen').classList.contains('hidden')) {
+            showScreen('gameScreen');
         }
-
-        if(data.status === 'finished') {
-            clearInterval(timerInterval);
-            showFinalResults(players);
+        if(data.status === 'playing') updateGameUI(data);
+        if(data.status === 'finished') { 
+            clearInterval(timerInterval); 
+            showFinalResults(players); 
         }
     });
 }
 
+// Start Game
 function startGame() {
-    // اختيار 4 أسئلة عشوائية من أصل 200+
     currentGameQuestions = getRandomQuestions(4);
     db.ref('rooms/' + currentRoom).update({ 
         status: 'playing', 
         qIndex: 0, 
-        timer: 45,
-        questions: currentGameQuestions
+        timer: 45, 
+        questions: currentGameQuestions 
     });
     startTimer();
-    showNotification("🎮 بدأت اللعبة! حظاً سعيداً");
+    showNotification("🎮 بدأت اللعبة! حظاً موفقاً!");
 }
 
+// Timer
 function startTimer() {
+    if(timerInterval) clearInterval(timerInterval);
     let timeLeft = 45;
     timerInterval = setInterval(() => {
         timeLeft--;
         db.ref('rooms/' + currentRoom).update({ timer: timeLeft });
+        const display = document.getElementById('timeLeftDisplay');
+        if(display) display.innerText = timeLeft;
         const progressPercent = (timeLeft / 45) * 100;
         document.getElementById('questionProgress').style.width = progressPercent + '%';
-        document.getElementById('timeLeft').innerText = timeLeft;
-        
-        if(timeLeft <= 0) {
-            clearInterval(timerInterval);
-            nextQuestionOrFinish();
+        if(timeLeft <= 5 && timeLeft > 0) { 
+            if(lastTimerSecond !== timeLeft) playWarningBeep(); 
+            display?.classList.add('warning-timer');
+        } else display?.classList.remove('warning-timer');
+        if(timeLeft === 0) { 
+            clearInterval(timerInterval); 
+            playTimeoutAlarm(); 
+            nextQuestionOrFinish(); 
         }
+        lastTimerSecond = timeLeft;
     }, 1000);
 }
 
+// Update Game UI
 function updateGameUI(data) {
     const questions = data.questions || currentGameQuestions;
-    if(!questions || questions.length === 0) return;
-    
+    if(!questions.length) return;
     const qData = questions[data.qIndex];
     if(!qData) return;
-    
     document.getElementById('questionText').innerText = qData.q;
-    document.getElementById('qCount').innerText = `${data.qIndex + 1}/4`;
+    document.getElementById('qCount').innerText = `${data.qIndex + 1}`;
     document.getElementById('totalQ').innerText = '4';
-    document.getElementById('timeLeft').innerText = data.timer;
+    document.getElementById('timeLeftDisplay').innerText = data.timer;
     document.getElementById('myScoreDisplay').innerText = data.players[myId]?.score || 0;
-
     const myFound = data.players[myId]?.found || [];
-    
     const board = document.getElementById('answersBoard');
     board.innerHTML = "";
     let idx = 1;
@@ -809,86 +1448,84 @@ function updateGameUI(data) {
         const isFound = myFound.includes(ans);
         board.innerHTML += `
             <div class="ans-item ${isFound ? 'found' : ''}">
-                <span><span class="ans-number">${idx}</span> ${isFound ? ans : '???'}</span>
-                <span class="ans-value">${isFound ? qData.a[ans] + '%' : '?'}</span>
-            </div>
-        `;
+                <div class="ans-text">
+                    <span class="ans-number">${idx}</span>
+                    ${isFound ? `✅ ${ans}` : '❓ انتظر...'}
+                </div>
+                <span class="ans-value">${isFound ? qData.a[ans] + '%' : '???'}</span>
+            </div>`;
         idx++;
     }
 }
 
+// Submit Guess
 function submitGuess() {
-    const guess = document.getElementById('guessInput').value.trim();
-    if(!guess) {
-        document.getElementById('feedbackMsg').innerHTML = "✏️ اكتب تخميناً أولاً!";
-        return;
+    const guessInput = document.getElementById('guessInput');
+    const guess = guessInput.value.trim();
+    const feedbackMsg = document.getElementById('feedbackMsg');
+    
+    if(!guess) { 
+        feedbackMsg.className = 'feedback-msg feedback-error';
+        feedbackMsg.innerHTML = "✏️ اكتب تخميناً أولاً!";
+        return; 
     }
     
     db.ref('rooms/' + currentRoom).once('value', snap => {
         const data = snap.val();
         if(!data || data.status !== 'playing') return;
-        
         const questions = data.questions || currentGameQuestions;
         const qData = questions[data.qIndex];
-        
         let matchedAnswer = null;
-        for(let ans in qData.a) {
-            if(isMatchingAnswer(guess, ans)) {
-                matchedAnswer = ans;
-                break;
-            }
-        }
-        
+        for(let ans in qData.a) if(isMatchingAnswer(guess, ans)) { matchedAnswer = ans; break; }
         const myFound = data.players[myId]?.found || [];
         
         if(matchedAnswer && !myFound.includes(matchedAnswer)) {
             const points = qData.a[matchedAnswer];
             const newScore = (data.players[myId]?.score || 0) + points;
             const newFound = [...myFound, matchedAnswer];
-            
-            db.ref('rooms/' + currentRoom + '/players/' + myId).update({ 
-                score: newScore,
-                found: newFound
-            });
-            
-            document.getElementById('guessInput').value = "";
-            document.getElementById('feedbackMsg').innerHTML = `✅ صحيح! +${points} نقطة`;
-            showNotification(`✅ صحيح! +${points} نقطة`);
-            
+            db.ref('rooms/' + currentRoom + '/players/' + myId).update({ score: newScore, found: newFound });
+            guessInput.value = "";
+            feedbackMsg.className = 'feedback-msg feedback-success';
+            feedbackMsg.innerHTML = `🎉 صحيح! +${points} نقطة`;
+            showNotification(`✅ صحيح! +${points} نقطة`, "success");
+            playSuccessSound();
             updateGameUI({...data, players: {...data.players, [myId]: {...data.players[myId], score: newScore, found: newFound}}});
-        } 
-        else if(matchedAnswer && myFound.includes(matchedAnswer)) {
-            document.getElementById('feedbackMsg').innerHTML = "⚠️ هذه الإجابة سبق أن اكتشفتها!";
-            showNotification("⚠️ هذه الإجابة سبق أن اكتشفتها!", false);
-        }
-        else {
-            document.getElementById('feedbackMsg').innerHTML = `❌ "${guess}" غير صحيح!`;
-            showNotification(`❌ "${guess}" غير صحيح!`, false);
+        } else if(matchedAnswer && myFound.includes(matchedAnswer)) {
+            feedbackMsg.className = 'feedback-msg feedback-error';
+            feedbackMsg.innerHTML = "⚠️ هذه الإجابة سبق أن اكتشفتها!";
+            showNotification("⚠️ هذه الإجابة سبق أن اكتشفتها!", "error");
+        } else {
+            // ❌ WRONG: clear input automatically
+            guessInput.value = "";
+            feedbackMsg.className = 'feedback-msg feedback-error';
+            feedbackMsg.innerHTML = `❌ "${guess}" غير صحيح! تم مسح الإجابة`;
+            showNotification(`❌ "${guess}" غير صحيح! تم مسح الحقل`, "error");
+            playBeep(400, 0.2, 0.2);
         }
     });
 }
 
+// Next Question or Finish
 function nextQuestionOrFinish() {
     if(!isHost) return;
     db.ref('rooms/' + currentRoom).once('value', snap => {
         const data = snap.val();
         if(data.qIndex < 3) {
-            db.ref('rooms/' + currentRoom).update({
-                qIndex: data.qIndex + 1,
-                timer: 45
-            });
+            db.ref('rooms/' + currentRoom).update({ qIndex: data.qIndex + 1, timer: 45 });
             startTimer();
             showNotification(`📋 السؤال ${data.qIndex + 2} من 4`);
-        } else {
-            db.ref('rooms/' + currentRoom).update({ status: 'finished' });
-        }
+        } else db.ref('rooms/' + currentRoom).update({ status: 'finished' });
     });
 }
 
+// Show Final Results
 function showFinalResults(players) {
     showScreen('resultScreen');
     const sorted = Object.values(players).sort((a, b) => b.score - a.score);
     document.getElementById('winnerName').innerText = sorted[0].name;
+    
+    // Trigger confetti for winner
+    createConfetti();
     
     const rankDiv = document.getElementById('rankings');
     rankDiv.innerHTML = "";
@@ -896,29 +1533,24 @@ function showFinalResults(players) {
         const medal = index === 0 ? '🏆' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : `${index+1}📌`));
         rankDiv.innerHTML += `
             <div class="rank-item">
-                <span>${medal} ${p.name}</span>
-                <span style="color: #00ff88;">${p.score} نقطة</span>
-            </div>
-        `;
+                <div class="rank-name">
+                    ${medal} ${p.name}
+                    ${index === 0 ? '🎉' : ''}
+                </div>
+                <div class="rank-score">⭐ ${p.score} نقطة</div>
+            </div>`;
     });
 }
 
-function leaveRoom() {
-    if(currentRoom) {
-        db.ref('rooms/' + currentRoom + '/players/' + myId).remove();
-    }
-    location.reload();
+// Leave Room
+function leaveRoom() { 
+    if(currentRoom) db.ref('rooms/' + currentRoom + '/players/' + myId).remove(); 
+    location.reload(); 
 }
 
-function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-}
-
-document.addEventListener('keypress', (e) => {
-    if(e.key === 'Enter' && !document.getElementById('gameScreen').classList.contains('hidden')) {
-        submitGuess();
-    }
+// Keyboard Support
+document.addEventListener('keypress', (e) => { 
+    if(e.key === 'Enter' && !document.getElementById('gameScreen').classList.contains('hidden')) submitGuess(); 
 });
 </script>
 </body>
