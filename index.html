@@ -3,935 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🌟 توقع الجمهور - تحدي الأصوات</title>
+    <title>🎯 توقع الجمهور - تحدي التخمين الذكي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #ff6b6b;
-            --primary-dark: #ee5a5a;
-            --secondary: #4ecdc4;
-            --accent: #ffe66d;
-            --bg-dark: #1a1a2e;
-            --bg-darker: #16213e;
-            --panel: rgba(255, 255, 255, 0.95);
-            --text-dark: #2d3436;
-            --text-light: #ffffff;
-            --gold: #ffd700;
-            --silver: #c0c0c0;
-            --bronze: #cd7f32;
-            --success: #00b894;
-            --danger: #e17055;
-            --purple: #a855f7;
-            --pink: #ec4899;
-            --blue: #3b82f6;
-            --orange: #f97316;
-        }
-        
-        body { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            min-height: 100vh; 
-            font-family: 'Cairo', sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            text-align: center;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background Particles */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-        
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            animation: float 15s infinite;
-            opacity: 0.6;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
-        }
-        
-        .bubbles-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        .bubble {
-            position: absolute;
-            bottom: -100px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-            border-radius: 50%;
-            animation: rise 8s infinite;
-            opacity: 0.4;
-        }
-        
-        @keyframes rise {
-            0% { transform: translateY(0) scale(1); opacity: 0.4; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
-        }
-
-        /* Main Container */
-        .container {
-            position: relative;
-            z-index: 1;
-            width: 95%;
-            max-width: 550px;
-            padding: 10px;
-        }
-
-        /* Screen Styles */
-        .screen { 
-            background: linear-gradient(145deg, #ffffff, #f8f9fa);
-            padding: 35px 30px; 
-            border-radius: 30px; 
-            width: 100%;
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .screen::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--purple), var(--pink));
-            background-size: 200% 100%;
-            animation: gradientShift 3s linear infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        .screen:hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 
-                0 35px 60px rgba(0, 0, 0, 0.35),
-                0 0 0 2px rgba(255, 107, 107, 0.3);
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #ff6b6b; --primary-dark: #ee5a5a; --secondary: #4ecdc4; --accent: #ffe66d; --bg-dark: #1a1a2e; --bg-darker: #16213e; --panel: rgba(255, 255, 255, 0.95); --text-dark: #2d3436; --text-light: #ffffff; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; --success: #00b894; --danger: #e17055; --purple: #a855f7; --pink: #ec4899; --blue: #3b82f6; --orange: #f97316; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); min-height: 100vh; font-family: 'Cairo', sans-serif; display: flex; justify-content: center; align-items: center; text-align: center; position: relative; overflow-x: hidden; }
+        .particles, .bubbles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .particle { position: absolute; border-radius: 50%; animation: float 15s infinite; opacity: 0.6; }
+        @keyframes float { 0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.6; } 90% { opacity: 0.6; } 100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; } }
+        .bubble { position: absolute; bottom: -100px; background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1)); border-radius: 50%; animation: rise 8s infinite; opacity: 0.4; }
+        @keyframes rise { 0% { transform: translateY(0) scale(1); opacity: 0.4; } 50% { opacity: 0.6; } 100% { transform: translateY(-100vh) scale(1.5); opacity: 0; } }
+        .container { position: relative; z-index: 1; width: 95%; max-width: 550px; padding: 10px; }
+        .screen { background: linear-gradient(145deg, #ffffff, #f8f9fa); padding: 35px 30px; border-radius: 30px; width: 100%; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8); position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .screen::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--purple), var(--pink)); background-size: 200% 100%; animation: gradientShift 3s linear infinite; }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
         .hidden { display: none !important; }
-
-        /* Typography */
-        h1 {
-            font-size: 2.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--purple), var(--pink));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 10px rgba(168, 85, 247, 0.2);
-        }
-        
-        h2 {
-            color: var(--purple);
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        h3 {
-            color: var(--text-dark);
-            font-size: 1.2rem;
-            margin: 12px 0;
-        }
-
-        .subtitle {
-            color: #636e72;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
-
-        .emoji-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            display: block;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* Input Styles */
-        .glass-input { 
-            padding: 16px 24px; 
-            border-radius: 50px; 
-            border: 3px solid transparent;
-            background: linear-gradient(#fff, #fff) padding-box,
-                        linear-gradient(135deg, var(--primary), var(--purple)) border-box;
-            color: var(--text-dark); 
-            margin: 10px 0; 
-            width: 90%; 
-            font-size: 1.1rem;
-            font-family: 'Cairo', sans-serif;
-            transition: all 0.3s;
-            outline: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .glass-input:focus {
-            border: 3px solid transparent;
-            background: linear-gradient(#fff, #fff) padding-box,
-                        linear-gradient(135deg, var(--secondary), var(--success)) border-box;
-            box-shadow: 0 6px 25px rgba(78, 205, 196, 0.3);
-            transform: scale(1.02);
-        }
-        
-        .glass-input::placeholder {
-            color: #b2bec3;
-        }
-
-        /* Button Styles */
-        button { 
-            background: linear-gradient(135deg, var(--primary), var(--purple));
-            color: white; 
-            border: none; 
-            padding: 14px 32px; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            font-weight: 700; 
-            font-size: 1.05rem; 
-            font-family: 'Cairo', sans-serif;
-            transition: all 0.3s;
-            margin: 8px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        button:hover::before {
-            left: 100%;
-        }
-        
-        button:hover { 
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.5);
-        }
-        
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary), var(--success));
-            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
-        }
-
-        .btn-secondary:hover {
-            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.5);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, var(--orange), var(--danger));
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
-        }
-
-        .btn-small {
-            padding: 10px 20px;
-            font-size: 0.9rem;
-        }
-
-        /* Game UI Components */
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
-            padding: 12px 20px;
-            border-radius: 20px;
-            margin-bottom: 15px;
-            color: white;
-        }
-
-        .score-display {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        .score-display span {
-            color: var(--accent);
-        }
-
-        .question-counter {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 1rem;
-        }
-
-        /* Timer Component */
-        .timer-wrapper {
-            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
-            border-radius: 25px;
-            padding: 15px 25px;
-            margin: 15px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .timer { 
-            font-size: 2.5rem; 
-            color: var(--accent); 
-            font-weight: 800; 
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 20px rgba(255, 230, 109, 0.5);
-            letter-spacing: 3px;
-        }
-        
-        .timer-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .timer-label span:first-child {
-            font-size: 0.9rem;
-            color: #a0a0a0;
-        }
-
-        .score-box { 
-            background: linear-gradient(135deg, var(--primary), var(--pink));
-            padding: 10px 18px; 
-            border-radius: 25px; 
-            font-size: 0.95rem;
-            color: white;
-            font-weight: 600;
-        }
-
-        /* Progress Bar */
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            margin: 12px 0;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-            background-size: 200% 100%;
-            animation: progressFlow 2s linear infinite;
-            transition: width 0.3s ease;
-            border-radius: 4px;
-        }
-
-        @keyframes progressFlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        /* Question Card */
-        .question-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 20px;
-            border-radius: 20px;
-            margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .question-text {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 10px;
-        }
-
-        /* Answers Grid */
-        .answers-grid { 
-            display: grid; 
-            gap: 12px; 
-            margin: 20px 0; 
-        }
-        
-        .ans-item { 
-            background: linear-gradient(135deg, #ffffff, #f1f3f5);
-            padding: 18px 22px;
-            border-radius: 20px; 
-            border: 3px solid transparent;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            font-weight: 700;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ans-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary), var(--purple));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .ans-item:hover {
-            transform: translateX(-5px) scale(1.02);
-            border-color: var(--primary);
-            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.2);
-        }
-
-        .ans-item:hover::before {
-            opacity: 1;
-        }
-        
-        .ans-item.found { 
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
-            border-color: var(--success);
-            animation: revealPulse 0.6s ease;
-        }
-
-        .ans-item.found::before {
-            background: linear-gradient(180deg, var(--success), var(--secondary));
-            opacity: 1;
-        }
-
-        @keyframes revealPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .ans-number {
-            background: linear-gradient(135deg, var(--primary), var(--purple));
-            color: white;
-            width: 38px;
-            height: 38px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-left: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .ans-item.found .ans-number {
-            background: linear-gradient(135deg, var(--success), var(--secondary));
-        }
-
-        .ans-text {
-            display: flex;
-            align-items: center;
-            font-size: 1.05rem;
-            color: var(--text-dark);
-        }
-        
-        .ans-value {
-            background: linear-gradient(135deg, var(--accent), var(--orange));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-size: 1.2rem;
-            font-weight: 800;
-        }
-
-        .ans-item.found .ans-value {
-            background: linear-gradient(135deg, var(--success), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
-
-        /* Input Group */
-        .input-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        
-        .input-group input {
-            flex: 1;
-            padding: 16px 22px;
-            border-radius: 50px;
-            border: 3px solid transparent;
-            background: linear-gradient(#fff, #fff) padding-box,
-                        linear-gradient(135deg, var(--secondary), var(--blue)) border-box;
-            color: var(--text-dark);
-            font-size: 1.05rem;
-            font-family: 'Cairo', sans-serif;
-            outline: none;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .input-group input:focus {
-            border: 3px solid transparent;
-            background: linear-gradient(#fff, #fff) padding-box,
-                        linear-gradient(135deg, var(--success), var(--secondary)) border-box;
-            box-shadow: 0 6px 25px rgba(78, 205, 196, 0.3);
-        }
-
-        /* Feedback Message */
-        .feedback-msg {
-            font-size: 0.95rem;
-            margin-top: 12px;
-            min-height: 30px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .feedback-success {
-            color: var(--success);
-            animation: fadeInUp 0.3s ease;
-        }
-
-        .feedback-error {
-            color: var(--danger);
-            animation: shake 0.4s ease;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        /* Player List */
-        .player-list {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 25px;
-            padding: 18px;
-            margin: 15px 0;
-        }
-
-        .player-list-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--purple);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .player-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px;
-            margin: 10px 0;
-            background: white;
-            border-radius: 20px;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .player-card:hover {
-            transform: translateX(-5px);
-            border-color: var(--secondary);
-        }
-        
-        .player-card.you {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, #fff5f5, #ffe0e0);
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
-        }
-
-        .player-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .player-score {
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        /* Room Code Box */
-        .room-code-box {
-            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
-            padding: 25px;
-            border-radius: 25px;
-            margin: 15px 0;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        .room-code-label {
-            color: #a0a0a0;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-        }
-        
-        .room-code {
-            font-size: 2.5rem;
-            letter-spacing: 12px;
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, var(--accent), var(--orange));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 800;
-        }
-
-        /* Rankings */
-        .rank-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            padding: 16px 22px; 
-            margin: 10px 0;
-            background: white;
-            border-radius: 20px;
-            transition: all 0.3s;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .rank-item:hover {
-            transform: translateX(-5px) scale(1.02);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .rank-item:first-child {
-            background: linear-gradient(135deg, #fff9e6, #fff3cc);
-            border: 2px solid var(--gold);
-        }
-
-        .rank-item:nth-child(2) {
-            background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
-            border: 2px solid var(--silver);
-        }
-
-        .rank-item:nth-child(3) {
-            background: linear-gradient(135deg, #fff5eb, #ffe8d6);
-            border: 2px solid var(--bronze);
-        }
-
-        .rank-name {
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-dark);
-        }
-
-        .rank-score {
-            color: var(--success);
-            font-weight: 800;
-            font-size: 1.1rem;
-        }
-
-        /* Winner Section */
-        .winner-section {
-            padding: 25px;
-            background: linear-gradient(135deg, #fff9e6, #fff3cc);
-            border-radius: 25px;
-            margin: 20px 0;
-            border: 3px solid var(--gold);
-        }
-
-        .winner-icon {
-            font-size: 4rem;
-            margin-bottom: 10px;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .winner-name { 
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--gold), var(--orange));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 10px 0; 
-        }
-
-        .winner-label {
-            font-size: 1rem;
-            color: var(--text-dark);
-            opacity: 0.7;
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary), var(--purple));
-            color: white;
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 700;
-            z-index: 1000;
-            animation: slideDown 3s ease forwards;
-            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.4);
-        }
-
-        .notification.error {
-            background: linear-gradient(135deg, var(--danger), var(--orange));
-            box-shadow: 0 8px 30px rgba(225, 112, 85, 0.4);
-        }
-        
-        .notification.success {
-            background: linear-gradient(135deg, var(--success), var(--secondary));
-            box-shadow: 0 8px 30px rgba(0, 184, 148, 0.4);
-        }
-        
-        @keyframes slideDown {
-            0% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
-            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
-        }
-
-        /* Confetti Animation */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            top: -10px;
-            animation: confettiFall 3s linear forwards;
-            z-index: 1000;
-        }
-
-        @keyframes confettiFall {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 480px) {
-            .screen {
-                padding: 25px 20px;
-                border-radius: 25px;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            .glass-input {
-                padding: 14px 18px;
-                font-size: 0.95rem;
-            }
-
-            button {
-                padding: 12px 24px;
-                font-size: 0.95rem;
-            }
-
-            .room-code {
-                font-size: 2rem;
-                letter-spacing: 8px;
-            }
-
-            .timer {
-                font-size: 2rem;
-            }
-
-            .question-text {
-                font-size: 1.2rem;
-            }
-
-            .ans-item {
-                padding: 14px 16px;
-            }
-
-            .ans-number {
-                width: 32px;
-                height: 32px;
-                font-size: 0.9rem;
-            }
-
-            .ans-text {
-                font-size: 0.95rem;
-            }
-
-            .ans-value {
-                font-size: 1rem;
-            }
-        }
-
-        /* Additional Animations */
-        .float-animation {
-            animation: floatUpDown 3s ease-in-out infinite;
-        }
-
-        @keyframes floatUpDown {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .spin-animation {
-            animation: spin 4s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* New Game Button Styling */
-        .new-game-btn {
-            background: linear-gradient(135deg, var(--success), var(--secondary));
-            margin-top: 15px;
-        }
-
-        /* Leave Room Button */
-        .leave-btn {
-            background: linear-gradient(135deg, #636e72, #b2bec3);
-            box-shadow: 0 4px 15px rgba(99, 110, 114, 0.4);
-        }
-
-        /* Waiting Message */
-        .waiting-msg {
-            color: var(--purple);
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .waiting-dots {
-            display: flex;
-            gap: 4px;
-        }
-
-        .waiting-dots span {
-            width: 8px;
-            height: 8px;
-            background: var(--purple);
-            border-radius: 50%;
-            animation: dotBounce 1.4s infinite;
-        }
-
-        .waiting-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .waiting-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes dotBounce {
-            0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-
-        /* Start Button */
-        .start-btn {
-            background: linear-gradient(135deg, var(--success), var(--secondary));
-            font-size: 1.2rem;
-            padding: 16px 40px;
-        }
-
-        /* Info Section */
-        .info-section {
-            background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
-            padding: 15px 20px;
-            border-radius: 20px;
-            margin-top: 15px;
-            color: white;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 8px 0;
-            font-size: 0.9rem;
-        }
-
-        /* Divider */
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 20px 0;
-            color: #b2bec3;
-            font-size: 0.9rem;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #dfe6e9, transparent);
-        }
-
-        .divider span {
-            padding: 0 15px;
-        }
+        h1 { font-size: 2.4rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--purple), var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 8px; }
+        h2 { color: var(--purple); font-size: 1.6rem; font-weight: 700; margin-bottom: 15px; }
+        .emoji-icon { font-size: 3rem; margin-bottom: 10px; display: block; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .glass-input { padding: 16px 24px; border-radius: 50px; border: 3px solid transparent; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, var(--primary), var(--purple)) border-box; color: var(--text-dark); margin: 10px 0; width: 90%; font-size: 1.1rem; font-family: 'Cairo', sans-serif; transition: all 0.3s; outline: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
+        .glass-input:focus { background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, var(--secondary), var(--success)) border-box; transform: scale(1.02); }
+        button { background: linear-gradient(135deg, var(--primary), var(--purple)); color: white; border: none; padding: 14px 32px; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 1.05rem; font-family: 'Cairo', sans-serif; transition: all 0.3s; margin: 8px; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4); }
+        button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.5s; }
+        button:hover::before { left: 100%; }
+        button:hover { transform: scale(1.05) translateY(-2px); }
+        .btn-secondary { background: linear-gradient(135deg, var(--secondary), var(--success)); }
+        .stats-bar { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker)); padding: 12px 20px; border-radius: 20px; margin-bottom: 15px; color: white; }
+        .timer-wrapper { background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker)); border-radius: 25px; padding: 15px 25px; margin: 15px 0; display: flex; justify-content: space-between; align-items: center; }
+        .timer { font-size: 2.5rem; color: var(--accent); font-weight: 800; font-family: 'Courier New', monospace; }
+        .progress-bar { width: 100%; height: 8px; background: rgba(0, 0, 0, 0.1); border-radius: 4px; margin: 12px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent)); transition: width 0.3s ease; }
+        .question-card { background: linear-gradient(135deg, #f8f9fa, #e9ecef); padding: 20px; border-radius: 20px; margin: 15px 0; }
+        .question-text { font-size: 1.4rem; font-weight: 700; color: var(--text-dark); }
+        .answers-grid { display: grid; gap: 12px; margin: 20px 0; }
+        .ans-item { background: linear-gradient(135deg, #ffffff, #f1f3f5); padding: 18px 22px; border-radius: 20px; border: 3px solid transparent; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; }
+        .ans-item.found { background: linear-gradient(135deg, #d4edda, #c3e6cb); border-color: var(--success); animation: revealPulse 0.6s ease; }
+        @keyframes revealPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .ans-number { background: linear-gradient(135deg, var(--primary), var(--purple)); color: white; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-left: 12px; }
+        .ans-value { background: linear-gradient(135deg, var(--accent), var(--orange)); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 1.2rem; font-weight: 800; }
+        .input-group { display: flex; gap: 12px; margin-top: 20px; }
+        .input-group input { flex: 1; padding: 16px 22px; border-radius: 50px; border: 3px solid transparent; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, var(--secondary), var(--blue)) border-box; font-family: 'Cairo', sans-serif; font-size: 1.05rem; }
+        .feedback-msg { font-size: 0.95rem; margin-top: 12px; min-height: 30px; font-weight: 600; }
+        .feedback-success { color: var(--success); animation: fadeInUp 0.3s ease; }
+        .feedback-error { color: var(--danger); animation: shake 0.4s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .player-list { background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 25px; padding: 18px; margin: 15px 0; }
+        .player-card { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; margin: 10px 0; background: white; border-radius: 20px; }
+        .player-card.you { border-color: var(--primary); background: linear-gradient(135deg, #fff5f5, #ffe0e0); }
+        .room-code-box { background: linear-gradient(135deg, var(--bg-dark), var(--bg-darker)); padding: 25px; border-radius: 25px; margin: 15px 0; }
+        .room-code { font-size: 2.5rem; letter-spacing: 12px; font-family: 'Courier New', monospace; background: linear-gradient(135deg, var(--accent), var(--orange)); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 800; }
+        .winner-section { padding: 25px; background: linear-gradient(135deg, #fff9e6, #fff3cc); border-radius: 25px; margin: 20px 0; border: 3px solid var(--gold); }
+        .winner-name { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--gold), var(--orange)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .rank-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; margin: 10px 0; background: white; border-radius: 20px; }
+        .notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary), var(--purple)); color: white; padding: 14px 28px; border-radius: 50px; font-weight: 700; z-index: 1000; animation: slideDown 3s ease forwards; }
+        @keyframes slideDown { 0% { opacity: 0; transform: translateX(-50%) translateY(-50px); } 15% { opacity: 1; transform: translateX(-50%) translateY(0); } 85% { opacity: 1; transform: translateX(-50%) translateY(0); } 100% { opacity: 0; transform: translateX(-50%) translateY(-50px); } }
+        .confetti { position: fixed; width: 10px; height: 10px; top: -10px; animation: confettiFall 3s linear forwards; z-index: 1000; }
+        @keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+        @media (max-width: 480px) { .question-text { font-size: 1.2rem; } .timer { font-size: 2rem; } .room-code { font-size: 2rem; letter-spacing: 8px; } }
     </style>
 </head>
 <body>
@@ -944,7 +78,7 @@
     <div id="loginScreen" class="screen">
         <span class="emoji-icon">🎯</span>
         <h1>توقع الجمهور</h1>
-        <p class="subtitle">🌟 تحدي الأصوات - لعبة جماعية ممتعة</p>
+        <p class="subtitle">🌟 تحدي الأصوات - تخمين ذكي يقبل كل الأخطاء</p>
         
         <input type="text" id="userName" class="glass-input" placeholder="👤 اكتب اسمك هنا" maxlength="15">
         
@@ -952,18 +86,17 @@
             <button class="btn-secondary" onclick="createRoom()">✨ إنشاء غرفة جديدة</button>
         </div>
 
-        <div class="divider"><span>أو</span></div>
+        <div class="divider" style="display: flex; align-items: center; margin: 20px 0; gap: 10px;"><hr style="flex:1;"><span>أو</span><hr style="flex:1;"></div>
 
         <div style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
             <input type="text" id="roomInput" class="glass-input" placeholder="🔢 الرمز" maxlength="4" style="width: 130px;">
             <button onclick="joinRoom()">🚪 انضمام</button>
         </div>
 
-        <div class="info-section">
-            <div class="info-item">👥 2 إلى 4 لاعبين</div>
-            <div class="info-item">❓ 4 أسئلة متنوعة</div>
-            <div class="info-item">⏱️ 45 ثانية لكل سؤال</div>
-            <div class="info-item">🎯 percentages %</div>
+        <div class="info-section" style="background: linear-gradient(135deg, #2d3436, #1a1a2e); padding: 15px; border-radius: 20px; margin-top: 15px; color: white;">
+            <div>✅ 2-4 لاعبين | 4 أسئلة | 45 ثانية</div>
+            <div>🎯 يقبل الأخطاء الإملائية والتقريبات تلقائياً!</div>
+            <div>📝 "غسالة" ✅ ← "غسال" أو "غسله" أو "غاسلة"</div>
         </div>
     </div>
 
@@ -975,57 +108,32 @@
             <div class="room-code-label">شارك هذا الرمز مع أصدقائك</div>
             <div class="room-code" id="roomCode">----</div>
         </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="waitingProgress"></div>
-        </div>
         <div class="player-list">
             <div class="player-list-title">👥 اللاعبون</div>
             <div id="playerList"></div>
         </div>
-        <div class="waiting-msg" id="waitingMsg">
-            <span>⏳ انتظار اللاعبين</span>
-            <div class="waiting-dots">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-        <button id="startBtn" class="start-btn hidden" onclick="startGame()">▶️ ابدأ اللعبة</button>
-        <button class="leave-btn btn-small" onclick="leaveRoom()">🚪 مغادرة</button>
+        <div class="waiting-msg" id="waitingMsg">⏳ انتظار اللاعبين ...</div>
+        <button id="startBtn" class="start-btn" style="background: linear-gradient(135deg, #00b894, #4ecdc4);" onclick="startGame()" hidden>▶️ ابدأ اللعبة</button>
+        <button class="leave-btn" style="background: #636e72; padding: 10px 20px;" onclick="leaveRoom()">🚪 مغادرة</button>
     </div>
 
     <!-- Game Screen -->
     <div id="gameScreen" class="screen hidden">
         <div class="stats-bar">
-            <div class="score-display">
-                🎯 <span id="myScoreDisplay">0</span> نقطة
-            </div>
-            <div class="score-box">
-                سؤال <span id="qCount">1</span>/<span id="totalQ">4</span>
-            </div>
+            <div>🎯 <span id="myScoreDisplay">0</span> نقطة</div>
+            <div class="score-box">سؤال <span id="qCount">1</span>/<span id="totalQ">4</span></div>
         </div>
-
         <div class="timer-wrapper">
-            <div class="timer-label">
-                <span>⏱️ الوقت</span>
-                <span style="font-size: 0.85rem; color: #888;">المتبقي</span>
-            </div>
+            <div>⏱️ الوقت المتبقي</div>
             <div class="timer" id="timeLeftDisplay">45</div>
         </div>
-
-        <div class="progress-bar">
-            <div class="progress-fill" id="questionProgress"></div>
-        </div>
-
-        <div class="question-card">
-            <div class="question-text" id="questionText">⏳ جاري التحميل...</div>
-        </div>
-
+        <div class="progress-bar"><div class="progress-fill" id="questionProgress" style="width:100%"></div></div>
+        <div class="question-card"><div class="question-text" id="questionText">⏳ جاري التحميل...</div></div>
         <div id="answersBoard" class="answers-grid"></div>
-
         <div class="input-group">
-            <input type="text" id="guessInput" placeholder="✏️ اكتب إجابتك هنا..." autocomplete="off">
+            <input type="text" id="guessInput" placeholder="✏️ اكتب إجابتك (حتى لو فيها أخطاء)..." autocomplete="off">
             <button class="btn-secondary" onclick="submitGuess()">📤 إرسال</button>
         </div>
-
         <div class="feedback-msg" id="feedbackMsg"></div>
     </div>
 
@@ -1036,522 +144,767 @@
             <div class="winner-label">الفائز</div>
             <div class="winner-name" id="winnerName">...</div>
         </div>
-        
-        <h2 style="margin-top: 20px;">📊 الترتيب النهائي</h2>
+        <h2>📊 الترتيب النهائي</h2>
         <div id="rankings"></div>
-        
-        <button class="new-game-btn" onclick="location.reload()">🎮 العب مرة أخرى</button>
+        <button class="new-game-btn" style="background: linear-gradient(135deg, #00b894, #4ecdc4);" onclick="location.reload()">🎮 العب مرة أخرى</button>
     </div>
 </div>
 
 <script>
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyCTKYD680Jdbl0azC9RTtuKZBaLX2uU_Ck",
-    authDomain: "my-online-store-34f34.firebaseapp.com",
-    databaseURL: "https://my-online-store-34f34-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "my-online-store-34f34",
-    storageBucket: "my-online-store-34f34.firebasestorage.app",
-    messagingSenderId: "288655549705",
-    appId: "1:288655549705:web:06901ce4ac1a50eebe1fd8"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-// Game State
-let myId = Math.random().toString(36).substr(2, 9);
-let myName = "";
-let currentRoom = "";
-let isHost = false;
-let timerInterval;
-let lastTimerSecond = -1;
-let soundEnabled = true;
-
-// Create Animated Particles
-function createParticles() {
-    const particlesContainer = document.getElementById('particles');
-    for(let i = 0; i < 30; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.width = (Math.random() * 15 + 5) + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.background = `linear-gradient(135deg, 
-            ${['#ff6b6b', '#4ecdc4', '#ffe66d', '#a855f7', '#ec4899'][Math.floor(Math.random() * 5)]}, 
-            ${['#ff8787', '#6ee7de', '#fff09d', '#c084fc', '#f472b6'][Math.floor(Math.random() * 5)]})`;
-        particle.style.animationDelay = Math.random() * 15 + 's';
-        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-        particlesContainer.appendChild(particle);
-    }
-}
-
-// Create Floating Bubbles
-function createBubbles() {
-    const bubblesContainer = document.getElementById('bubbles');
-    for(let i = 0; i < 20; i++) {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        bubble.style.left = Math.random() * 100 + '%';
-        bubble.style.width = (Math.random() * 40 + 20) + 'px';
-        bubble.style.height = bubble.style.width;
-        bubble.style.animationDelay = Math.random() * 8 + 's';
-        bubble.style.animationDuration = (Math.random() * 5 + 5) + 's';
-        bubblesContainer.appendChild(bubble);
-    }
-}
-
-// Audio Functions
-function playBeep(frequency = 880, duration = 0.3, volume = 0.3) {
-    if (!soundEnabled) return;
-    try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.frequency.value = frequency;
-        gainNode.gain.value = volume;
-        oscillator.type = 'sine';
-        oscillator.start();
-        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-        oscillator.stop(audioCtx.currentTime + duration);
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-    } catch(e) { console.log("audio error", e); }
-}
-
-function playTickSound() {
-    playBeep(660, 0.12, 0.15);
-}
-
-function playWarningBeep() {
-    playBeep(880, 0.25, 0.35);
-}
-
-function playTimeoutAlarm() {
-    playBeep(550, 0.6, 0.45);
-    setTimeout(() => playBeep(440, 0.5, 0.4), 200);
-}
-
-function playSuccessSound() {
-    playBeep(523, 0.15, 0.3);
-    setTimeout(() => playBeep(659, 0.15, 0.3), 100);
-    setTimeout(() => playBeep(784, 0.2, 0.35), 200);
-}
-
-// Confetti Effect
-function createConfetti() {
-    const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a855f7', '#ec4899', '#ffd700', '#00b894'];
-    for(let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animationDelay = Math.random() * 0.5 + 's';
-        confetti.style.width = (Math.random() * 10 + 5) + 'px';
-        confetti.style.height = (Math.random() * 10 + 5) + 'px';
-        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 3500);
-    }
-}
-
-// Questions Database
-const allQuestions = [
-    {q: "☕ شيء يشربه الناس في الصباح", a: {"قهوة": 45, "شاي": 25, "حليب": 20, "ماء": 10}},
-    {q: "🍕 الأكلة المفضلة لدى الشباب", a: {"بيتزا": 50, "برجر": 30, "معكرونة": 12, "شاورما": 8}},
-    {q: "🍎 فاكهة صحية", a: {"تفاح": 40, "موز": 30, "برتقال": 20, "فراولة": 10}},
-    {q: "🍫 نوع حلويات مفضل", a: {"شوكولاتة": 55, "كيك": 20, "بسكويت": 15, "آيس كريم": 10}},
-    {q: "🥤 مشروب غازي مشهور", a: {"كوكاكولا": 50, "بيبسي": 30, "سبrites": 12, "فانتا": 8}},
-    {q: "🍲 طبق رئيسي في الغداء", a: {"رز": 40, "خبز": 30, "معكرونة": 20, "بطاطس": 10}},
-    {q: "🧀 شيء يوضع على الخبز", a: {"جبن": 45, "زبدة": 25, "مربى": 20, "عسل": 10}},
-    {q: "🍜 شوربة مشهورة", a: {"عدس": 50, "خضار": 25, "دجاج": 15, "طماطم": 10}},
-    {q: "🥗 سلطة أساسية", a: {"خس": 40, "طماطم": 35, "خيار": 20, "جزر": 5}},
-    {q: "🍳 شيء يقدم مع البيض", a: {"خبز": 50, "جبن": 25, "زيتون": 15, "طماطم": 10}},
-    {q: "🐱 حيوان أليف مفضل", a: {"قط": 45, "كلب": 40, "سمك": 10, "هامستر": 5}},
-    {q: "🦁 حيوان مفترس", a: {"أسد": 50, "نمر": 25, "ذئب": 15, "تمساح": 10}},
-    {q: "🐘 حيوان ضخم", a: {"فيل": 60, "زرافة": 20, "فرس النهر": 12, "وحيد القرن": 8}},
-    {q: "🐬 حيوان بحري", a: {"دولفين": 45, "حوت": 30, "قرش": 15, "سلحفاة": 10}},
-    {q: "🐦 طائر يطير", a: {"نسر": 40, "حمام": 30, "عصفور": 20, "بومة": 10}},
-    {q: "🐎 حيوان يستخدم للركوب", a: {"حصان": 60, "جمل": 25, "حمار": 10, "بغل": 5}},
-    {q: "🐍 حيوان زاحف", a: {"ثعبان": 55, "سحلية": 20, "تمساح": 15, "سلحفاة": 10}},
-    {q: "🐝 حشرة تنتج العسل", a: {"نحل": 80, "نمل": 10, "ذباب": 5, "دبور": 5}},
-    {q: "⚽ رياضة جماعية", a: {"كرة قدم": 55, "كرة سلة": 20, "كرة طائرة": 15, "يد": 10}},
-    {q: "🏊 رياضة مائية", a: {"سباحة": 60, "غطس": 20, "تجديف": 12, "ركوب أمواج": 8}},
-    {q: "🎾 رياضة بالمضرب", a: {"تنس": 50, "ريشة طائرة": 30, "اسكواش": 15, "بينغ بونغ": 5}},
-    {q: "🥊 رياضة قتالية", a: {"ملاكمة": 45, "كاراتيه": 30, "جودو": 15, "تاي بوكس": 10}},
-    {q: "🏃 رياضة جري", a: {"عدو": 50, "ماراثون": 25, "سباق": 15, "هرولة": 10}},
-    {q: "🏋️ رياضة ألعاب قوة", a: {"رفع أثقال": 55, "كمال أجسام": 30, "مصارعة": 10, "جوجيتسو": 5}},
-    {q: "📱 تطبيق تواصل اجتماعي", a: {"واتساب": 45, "فيسبوك": 25, "انستغرام": 20, "تيك توك": 10}},
-    {q: "💻 نظام تشغيل مشهور", a: {"ويندوز": 55, "ماك": 20, "لينكس": 15, "أندرويد": 10}},
-    {q: "🎮 لعبة فيديو مشهورة", a: {"فورتنايت": 35, "ماين كرافت": 30, "ببجي": 20, "كول أوف ديوتي": 15}},
-    {q: "🔍 محرك بحث", a: {"جوجل": 80, "بينج": 10, "雅虎": 5, "دك دك غو": 5}},
-    {q: "📧 وسيلة تواصل", a: {"بريد إلكتروني": 50, "رسالة": 30, "مكالمة": 15, "فيديو": 5}},
-    {q: "📚 مادة دراسية", a: {"رياضيات": 40, "عربي": 25, "علوم": 20, "تاريخ": 15}},
-    {q: "✏️ أداة كتابة", a: {"قلم": 55, "رصاص": 25, "حبر": 12, "لوح": 8}},
-    {q: "🏫 مكان الدراسة", a: {"مدرسة": 60, "جامعة": 25, "معهد": 10, "بيت": 5}},
-    {q: "🎓 شهادة جامعية", a: {"بكالوريوس": 50, "ماجستير": 30, "دكتوراه": 15, "دبلوم": 5}},
-    {q: "📖 شيء تقرأه", a: {"كتاب": 55, "جريدة": 20, "مجلة": 15, "رواية": 10}},
-    {q: "🏠 غرفة في المنزل", a: {"نوم": 40, "جلوس": 30, "مطبخ": 20, "حمام": 10}},
-    {q: "🛋️ أثاث منزلي", a: {"كنبة": 40, "طاولة": 25, "كرسي": 20, "خزانة": 15}},
-    {q: "🍳 جهاز في المطبخ", a: {"ثلاجة": 35, "فرن": 30, "غسالة": 20, "خلاط": 15}},
-    {q: "🧹 أداة تنظيف", a: {"مكنسة": 45, "ممسحة": 25, "خرقة": 20, "فرشاة": 10}},
-    {q: "💊 دواء شائع", a: {"بانادول": 50, "اسبرين": 25, "مضاد حيوي": 15, "فيتامين": 10}},
-    {q: "🏥 مكان العلاج", a: {"مستشفى": 55, "عيادة": 30, "صيدلية": 10, "بيت": 5}},
-    {q: "🦷 طبيب متخصص", a: {"أسنان": 40, "عيون": 30, "جلدية": 20, "قلب": 10}},
-    {q: "💄 مادة تجميل", a: {"أحمر شفاه": 35, "كحل": 30, "ظفر": 20, "بودرة": 15}},
-    {q: "✈️ وسيلة سفر", a: {"طائرة": 45, "سيارة": 35, "قطار": 12, "باص": 8}},
-    {q: "🌊 منظر طبيعي", a: {"بحر": 45, "جبل": 30, "غابة": 15, "صحراء": 10}},
-    {q: "🏝️ مكان سياحي", a: {"شاطئ": 50, "مدينة": 25, "متحف": 15, "منتزه": 10}},
-    {q: "🌡️ ظاهرة جوية", a: {"مطر": 45, "شمس": 30, "ريح": 15, "ثلج": 10}},
-    {q: "🎬 فيلم شهير", a: {"تايتانيك": 30, "افاتار": 25, "الملك الأسود": 25, "هاري بوتر": 20}},
-    {q: "🎵 آلة موسيقية", a: {"جيتار": 40, "بيانو": 30, "كمان": 20, "طبلة": 10}},
-    {q: "🎨 لون أساسي", a: {"أحمر": 40, "أزرق": 35, "أصفر": 15, "أخضر": 10}},
-    {q: "📺 برنامج تلفزيوني", a: {"مسلسل": 45, "أخبار": 25, "رياضة": 20, "كارتون": 10}},
-    {q: "💰 عملة معروفة", a: {"دولار": 50, "يورو": 25, "ريال": 15, "دينار": 10}},
-    {q: "🎁 مناسبة للهدايا", a: {"عيد": 40, "زواج": 30, "ميلاد": 20, "نجاح": 10}},
-    {q: "⏰ وقت من اليوم", a: {"صباح": 40, "مساء": 35, "ليل": 15, "ظهر": 10}},
-    {q: "📞 اختراع مهم", a: {"هاتف": 45, "انترنت": 30, "كهرباء": 15, "سيارة": 10}},
-    {q: "🕋 مكان مقدس", a: {"مسجد": 50, "كنيسة": 25, "معبد": 15, "كنيس": 10}},
-    {q: "🌙 شهر عربي", a: {"رمضان": 55, "محرم": 20, "شعبان": 15, "ذو الحجة": 10}},
-    {q: "👔 لبس رسمي", a: {"بدلة": 45, "ربطة عنق": 25, "قميص": 20, "بنطلون": 10}},
-    {q: "👶 مرحلة عمرية", a: {"طفولة": 45, "مراهقة": 30, "شباب": 15, "كهولة": 10}},
-    {q: "💍 مجوهرات", a: {"ذهب": 50, "فضة": 25, "ألماس": 15, "لؤلؤ": 10}},
-    {q: "🕹️ هواية شائعة", a: {"قراءة": 35, "رياضة": 30, "ألعاب": 25, "سفر": 10}},
-    {q: "🔑 شيء مهم في البيت", a: {"مفتاح": 40, "باب": 30, "نافذة": 20, "سور": 10}},
-    {q: "🚗 علامة سيارة", a: {"تويوتا": 40, "مرسيدس": 25, "بي ام دبليو": 20, "هوندا": 15}},
-    {q: "📺 جهاز في المنزل", a: {"تلفاز": 45, "ثلاجة": 25, "غسالة": 20, "مكيف": 10}},
-    {q: "🧸 لعبة أطفال", a: {"دمية": 40, "سيارة": 35, "كرة": 15, "تركيب": 10}},
-    {q: "🎄 عطلة دينية", a: {"الفطر": 40, "الأضحى": 35, "الميلاد": 15, "الفصح": 10}},
-    {q: "🧩 نوع ذكاء", a: {"لغوي": 35, "رياضي": 35, "اجتماعي": 20, "مكاني": 10}},
-    {q: "🎭 مهنة فنية", a: {"ممثل": 45, "مغني": 30, "رسام": 15, "كاتب": 10}},
-    {q: "⚙️ حرفة يدوية", a: {"نجارة": 40, "حدادة": 30, "خياطة": 20, "بناء": 10}},
-    {q: "🌱 نبات منزلي", a: {"صبار": 45, "ورد": 30, "نخيل": 15, "ريحان": 10}},
-    {q: "🚗 شيء تجده في السيارة", a: {"مقود": 40, "كرسي": 30, "مرآة": 20, "راديو": 10}},
-    {q: "🍔 شيء تأكله بسرعة", a: {"برجر": 45, "بيتزا": 30, "شاورما": 15, "سندويتش": 10}},
-    {q: "🏫 شيء يوجد في المدرسة", a: {"سبورة": 40, "طاولة": 30, "كرسي": 20, "كتاب": 10}},
-    {q: "📱 شيء لا تستطيع العيش بدونه", a: {"هاتف": 50, "انترنت": 30, "مال": 15, "عائلة": 5}},
-    {q: "🎮 شيء يفعله الشباب في وقت الفراغ", a: {"ألعاب": 40, "خروج": 30, "مشاهدة": 20, "نوم": 10}},
-    {q: "🍹 مشروب في الصيف", a: {"عصير": 45, "ماء": 30, "مشروب غازي": 15, "شاي بارد": 10}},
-    {q: "🔥 شيء حار", a: {"نار": 50, "شمس": 25, "شاي": 15, "طعام": 10}},
-    {q: "❄️ شيء بارد", a: {"ثلج": 45, "ماء": 30, "آيس كريم": 15, "عصير": 10}},
-    {q: "🏃‍♂️ شيء يساعد على الصحة", a: {"رياضة": 50, "ماء": 20, "نوم": 20, "أكل صحي": 10}},
-    {q: "🎒 شيء تحمله معك يوميًا", a: {"هاتف": 40, "مفاتيح": 30, "محفظة": 20, "حقيبة": 10}},
-    {q: "📺 شيء تشاهده في التلفاز", a: {"مسلسلات": 40, "أفلام": 30, "أخبار": 20, "كرتون": 10}},
-    {q: "🧑‍🍳 شيء في المطبخ", a: {"سكين": 40, "ملعقة": 30, "قدر": 20, "فرن": 10}},
-    {q: "🎧 شيء تسمعه", a: {"موسيقى": 45, "أخبار": 25, "بودكاست": 20, "راديو": 10}},
-    {q: "🛏️ شيء في غرفة النوم", a: {"سرير": 50, "وسادة": 25, "غطاء": 15, "خزانة": 10}},
-    {q: "💡 شيء يضيء", a: {"مصباح": 50, "شمس": 25, "شمعة": 15, "كهرباء": 10}},
-    {q: "📚 شيء تستخدمه للدراسة", a: {"كتاب": 40, "قلم": 30, "دفتر": 20, "حاسوب": 10}},
-    {q: "🚿 شيء في الحمام", a: {"دش": 40, "صابون": 30, "منشفة": 20, "مرآة": 10}},
-    {q: "🍿 شيء تأكله في السينما", a: {"فشار": 60, "شوكولاتة": 20, "مشروب": 15, "حلوى": 5}},
-    {q: "⏳ شيء يمر بسرعة", a: {"وقت": 50, "عطلة": 25, "عمر": 15, "يوم": 10}},
-    {q: "📦 شيء يمكن شحنه", a: {"طرد": 50, "هاتف": 20, "بطارية": 20, "جهاز": 10}},
-    {q: "🚪 شيء تفتحه", a: {"باب": 50, "نافذة": 25, "علبة": 15, "هاتف": 10}},
-    {q: "🔒 شيء تغلقه", a: {"باب": 45, "قفل": 30, "هاتف": 15, "خزانة": 10}},
-    {q: "🎉 شيء في الحفلات", a: {"موسيقى": 40, "رقص": 30, "طعام": 20, "أصدقاء": 10}},
-    {q: "📸 شيء تلتقطه بالكاميرا", a: {"صورة": 50, "فيديو": 30, "منظر": 10, "ناس": 10}},
-    {q: "🏖️ شيء تفعله في البحر", a: {"سباحة": 50, "استرخاء": 20, "لعب": 20, "تصوير": 10}},
-    {q: "🛒 شيء تشتريه من السوق", a: {"طعام": 40, "ملابس": 30, "خضار": 20, "أدوات": 10}},
-    {q: "⌚ شيء يدل على الوقت", a: {"ساعة": 60, "هاتف": 25, "منبه": 10, "شمس": 5}},
-    {q: "🎓 شيء تفعله بعد الدراسة", a: {"عمل": 40, "راحة": 30, "سفر": 20, "تعلم": 10}},
-    {q: "📦 شيء يوجد في المنزل", a: {"أثاث": 40, "تلفاز": 30, "ثلاجة": 20, "ألعاب": 10}},
-    {q: "🌙 شيء تفعله في الليل", a: {"نوم": 50, "هاتف": 20, "مشاهدة": 20, "دراسة": 10}},
-];
-
-// Initialize particles and bubbles
-createParticles();
-createBubbles();
-
-let currentGameQuestions = [];
-
-function getRandomQuestions(count) {
-    const shuffled = [...allQuestions];
-    for(let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled.slice(0, count);
-}
-
-// Answer Matching Function
-function isMatchingAnswer(userAnswer, correctAnswer) {
-    const u = userAnswer.toLowerCase().trim();
-    const c = correctAnswer.toLowerCase().trim();
-    if (u === c) return true;
-    const uWithoutAl = u.replace(/^ال/, '');
-    const cWithoutAl = c.replace(/^ال/, '');
-    if (uWithoutAl === cWithoutAl) return true;
-    if (uWithoutAl.replace(/ه$/, '') === cWithoutAl.replace(/ه$/, '')) return true;
-    const synonyms = {
-        "قهوة": ["قهوي","coffee"], "شاي": ["شاى","tea"], "بيتزا":["pizza"], "برجر":["برغر"], 
-        "قط":["قطة","بسب"], "كلب":["كلبة"], "أسد":["سبع"], "فيل":["فيلة"], "ثعبان":["حية"]
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCTKYD680Jdbl0azC9RTtuKZBaLX2uU_Ck",
+        authDomain: "my-online-store-34f34.firebaseapp.com",
+        databaseURL: "https://my-online-store-34f34-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "my-online-store-34f34",
+        storageBucket: "my-online-store-34f34.firebasestorage.app",
+        appId: "1:288655549705:web:06901ce4ac1a50eebe1fd8"
     };
-    for(let key in synonyms) if(c === key && synonyms[key].includes(u)) return true;
-    return false;
-}
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-// Notification Function
-function showNotification(msg, type = "success") {
-    const notif = document.createElement('div');
-    notif.className = `notification ${type}`;
-    notif.textContent = msg;
-    document.body.appendChild(notif);
-    setTimeout(() => notif.remove(), 3000);
-}
+    let myId = Math.random().toString(36).substr(2, 9);
+    let myName = "";
+    let currentRoom = "";
+    let isHost = false;
+    let timerInterval;
+    let currentGameQuestions = [];
 
-// Screen Navigation
-function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-}
+    // ======================== قاعدة الأسئلة (يمكنك إضافة المزيد) ========================
+    const allQuestions = [
+        {q: "☕ شيء يشربه الناس في الصباح", a: {"قهوة": 45, "شاي": 25, "حليب": 20, "ماء": 10}},
+        {q: "🍕 الأكلة المفضلة لدى الشباب", a: {"بيتزا": 50, "برجر": 30, "معكرونة": 12, "شاورما": 8}},
+        {q: "🍎 فاكهة صحية", a: {"تفاح": 40, "موز": 30, "برتقال": 20, "فراولة": 10}},
+        {q: "☕ شيء يشربه الناس في الصباح", a: {"قهوة": 45, "شاي": 25, "حليب": 20, "ماء": 10}},
+    {q: "🍲 أكلة جزائرية مشهورة", a: {"كسكس": 50, "شخشوخة": 20, "شوربة": 15, "دولمة": 15}},
+    {q: "🍔 أكلة سريعة مفضلة في الجزائر", a: {"كاشير": 35, "شاورما": 30, "بيتزا": 20, "بانيني": 15}},
+    {q: "🍰 حلويات جزائرية مشهورة", a: {"مقروط": 35, "بقلاوة": 30, "غريبة": 20, "قلب اللوز": 15}},
+    {q: "🥘 أكلة في رمضان", a: {"شوربة": 40, "بوراك": 30, "طاجين": 20, "سلطة": 10}},
+    {q: "🍞 شيء يؤكل مع الشاي", a: {"خبز": 40, "بسكويت": 30, "كيك": 20, "مقروط": 10}},
+    {q: "🥩 لحم مفضل في الجزائر", a: {"دجاج": 40, "خروف": 30, "بقر": 20, "سمك": 10}},
+    {q: "🍟 شيء يؤكل مع البطاطا", a: {"دجاج": 40, "لحم": 30, "بيض": 20, "صلصة": 10}},
+    {q: "🍳 فطور جزائري بسيط", a: {"خبز": 40, "بيض": 30, "زبدة": 20, "جبن": 10}},
+    {q: "🥗 سلطة معروفة", a: {"سلطة مشوية": 40, "سلطة خضراء": 30, "سلطة رز": 20, "سلطة بطاطا": 10}},
 
-// Create Room
-function createRoom() {
-    myName = document.getElementById('userName').value.trim();
-    if(!myName) { 
-        showNotification("✏️ اكتب اسمك أولاً!", "error"); 
-        return; 
+    {q: "🚗 وسيلة نقل", a: {"سيارة": 50, "حافلة": 20, "دراجة": 20, "تاكسي": 10}},
+    {q: "📱 تطبيق مشهور", a: {"فيسبوك": 40, "واتساب": 30, "انستغرام": 20, "تيك توك": 10}},
+    {q: "🎮 لعبة مشهورة", a: {"فري فاير": 40, "فيفا": 30, "بوبجي": 20, "كول اوف ديوتي": 10}},
+    {q: "📺 قناة جزائرية", a: {"النهار": 40, "الشروق": 30, "ENTV": 20, "سميرة": 10}},
+    {q: "🏫 مكان الدراسة", a: {"مدرسة": 50, "جامعة": 30, "معهد": 10, "بيت": 10}},
+    {q: "📚 مادة دراسية", a: {"رياضيات": 40, "عربي": 30, "علوم": 20, "تاريخ": 10}},
+    {q: "👨‍🏫 شخص في المدرسة", a: {"أستاذ": 50, "تلميذ": 30, "مدير": 10, "حارس": 10}},
+    {q: "🖊️ أداة في القسم", a: {"قلم": 40, "دفتر": 30, "كتاب": 20, "مسطرة": 10}},
+
+    {q: "🐶 حيوان أليف", a: {"قط": 45, "كلب": 35, "سمك": 10, "هامستر": 10}},
+    {q: "🐄 حيوان في المزرعة", a: {"بقرة": 40, "خروف": 30, "دجاج": 20, "حصان": 10}},
+    {q: "🌳 شيء في الطبيعة", a: {"شجرة": 40, "نهر": 30, "جبل": 20, "بحر": 10}},
+    {q: "🌞 شيء في الصيف", a: {"حر": 40, "بحر": 30, "عطلة": 20, "شمس": 10}},
+    {q: "❄️ شيء في الشتاء", a: {"برد": 40, "مطر": 30, "ثلج": 20, "رياح": 10}},
+
+    {q: "🎁 شيء يقدم كهدية", a: {"عطر": 40, "ساعة": 30, "ملابس": 20, "هاتف": 10}},
+    {q: "👕 لباس شائع", a: {"قميص": 40, "بنطلون": 30, "جاكيت": 20, "حذاء": 10}},
+    {q: "👟 نوع حذاء", a: {"سبور": 50, "كلاسيك": 20, "صندل": 20, "بوت": 10}},
+    {q: "🧢 شيء يلبس في الرأس", a: {"قبعة": 40, "كاسكيت": 30, "شال": 20, "خوذة": 10}},
+
+    {q: "🏠 غرفة في المنزل", a: {"غرفة نوم": 40, "مطبخ": 30, "صالون": 20, "حمام": 10}},
+    {q: "🛏️ شيء في غرفة النوم", a: {"سرير": 50, "وسادة": 20, "خزانة": 20, "غطاء": 10}},
+    {q: "🍽️ شيء في المطبخ", a: {"فرن": 40, "ثلاجة": 30, "طاولة": 20, "ميكروويف": 10}},
+    {q: "📺 شيء في الصالون", a: {"تلفاز": 50, "أريكة": 20, "طاولة": 20, "سجادة": 10}},
+
+    {q: "😂 شيء يضحك الناس", a: {"نكتة": 40, "فيديو": 30, "صديق": 20, "موقف": 10}},
+    {q: "😴 شيء يسبب النوم", a: {"تعب": 40, "ليل": 30, "هدوء": 20, "ملل": 10}},
+    {q: "😡 شيء يغضب الناس", a: {"كذب": 40, "إهانة": 30, "تأخر": 20, "مشكل": 10}},
+
+    {q: "📅 مناسبة دينية", a: {"رمضان": 40, "عيد الفطر": 30, "عيد الأضحى": 20, "المولد": 10}},
+    {q: "🎉 شيء في العيد", a: {"ملابس": 40, "حلويات": 30, "نقود": 20, "زيارات": 10}},
+    {q: "🕌 مكان للصلاة", a: {"مسجد": 60, "بيت": 20, "مصلى": 10, "ساحة": 10}},
+
+    {q: "⚽ رياضة مشهورة", a: {"كرة القدم": 60, "كرة اليد": 20, "جري": 10, "ملاكمة": 10}},
+    {q: "☕ شيء تشربه في الصباح", a: {"قهوة": 48, "شاي": 25, "حليب": 17, "عصير": 10}},
+    {q: "🍳 شيء تأكله على الفطور", a: {"بيض": 40, "جبن": 30, "خبز": 20, "زيتون": 10}},
+    {q: "🚗 وسيلة التنقل إلى العمل", a: {"سيارة": 55, "باص": 20, "مترو": 15, "مشي": 10}},
+    {q: "📱 أول شيء تفتحه على هاتفك صباحاً", a: {"واتساب": 45, "انستغرام": 25, "فيسبوك": 20, "تيك توك": 10}},
+    {q: "🛏️ كم ساعة تنام في الليل", a: {"7-8 ساعات": 50, "5-6 ساعات": 25, "أقل من 5": 15, "أكثر من 8": 10}},
+    {q: "🍽️ أكثر وجبة تهمل خلال اليوم", a: {"الفطور": 45, "الغداء": 15, "العشاء": 30, "سناك": 10}},
+    {q: "🧼 أول شيء تفعله عندما تستيقظ", a: {"غسل الوجه": 40, "شرب ماء": 25, "تفقد الهاتف": 25, "الصلاة": 10}},
+    {q: "🚿 في أي وقت تستحم غالباً", a: {"الصباح": 45, "المساء": 40, "الظهر": 10, "أي وقت": 5}},
+    {q: "📺 كم ساعة تشاهد التلفاز يومياً", a: {"1-2 ساعة": 45, "2-3 ساعات": 30, "أقل من ساعة": 15, "أكثر من 3": 10}},
+    {q: "☕ كم كوب قهوة تشرب يومياً", a: {"1-2 كوب": 50, "3-4 أكواب": 25, "لا أشرب": 15, "أكثر من 4": 10}},
+    {q: "🥡 كم مرة تطلب طعاماً جاهزاً في الأسبوع", a: {"مرة": 40, "مرتين": 30, "لا أطلب": 20, "أكثر من 3 مرات": 10}},
+    {q: "🛒 أين تفضل التسوق", a: {"سوبر ماركت": 45, "سوق شعبي": 30, "أونلاين": 15, "محل صغير": 10}},
+    {q: "💰 كم تنفق يومياً في المعدل", a: {"1000-2000 دج": 40, "500-1000 دج": 35, "أقل من 500": 15, "أكثر من 2000": 10}},
+    {q: "🚶 كم خطوة تمشي يومياً", a: {"3000-5000": 40, "5000-10000": 35, "أقل من 3000": 15, "أكثر من 10000": 10}},
+    {q: "🏋️ كم مرة تمارس الرياضة أسبوعياً", a: {"مرة": 35, "مرتين": 30, "لا أمارس": 25, "3 مرات فأكثر": 10}},
+    {q: "📖 كم كتاب تقرأ في السنة", a: {"لا شيء": 45, "1-2 كتاب": 35, "3-5 كتب": 15, "أكثر من 5": 5}},
+    {q: "🍿 أي نوع أفلام تفضل", a: {"أكشن": 40, "كوميدي": 35, "دراما": 15, "رعب": 10}},
+    {q: "🎵 أي نوع موسيقى تفضل", a: {"راب": 40, "عربية": 35, "بوب": 15, "كلاسيكي": 10}},
+    {q: "📱 كم ساعة تقضي على الهاتف يومياً", a: {"2-4 ساعات": 45, "4-6 ساعات": 30, "أقل من ساعتين": 15, "أكثر من 6": 10}},
+    {q: "🛌 في أي وقت تخلد إلى النوم", a: {"10-11 مساءً": 40, "11-12 ليلاً": 35, "بعد 12": 15, "قبل 10": 10}},
+
+    // ======================== الطعام والشراب (20 سؤال) ========================
+    {q: "🍕 الأكلة السريعة المفضلة", a: {"بيتزا": 45, "برجر": 30, "شاورما": 15, "فاست فوكس": 10}},
+    {q: "🍹 مشروب تفضله في الصيف", a: {"عصير بارد": 45, "مشروب غازي": 30, "ماء بارد": 15, "شاي مثلج": 10}},
+    {q: "🍲 الطبق التقليدي المفضل", a: {"كسكس": 55, "شخشوخة": 20, "دوبارة": 15, "رفيس": 10}},
+    {q: "🍰 الحلوى المفضلة", a: {"شوكولاتة": 45, "غريبة": 25, "مقروط": 20, "بسبوسة": 10}},
+    {q: "🥘 أفضل طبق غداء", a: {"طاجين": 40, "كسكس": 35, "مرقة": 15, "مشوي": 10}},
+    {q: "🥗 أفضل سلطة", a: {"سلطة خضراء": 45, "سلطة مشكلة": 30, "سلطة زيتون": 15, "سلطة تونسية": 10}},
+    {q: "🍚 أفضل طبق جانبي", a: {"رز": 45, "بطاطس مقلية": 35, "خبز": 15, "معكرونة": 5}},
+    {q: "🍝 نوع المعكرونة المفضل", a: {"سباغيتي": 50, "بيني": 20, "فيتوتشيني": 15, "لافيي": 15}},
+    {q: "🍗 أفضل طريقة لطهي الدجاج", a: {"مشوي": 50, "مقلي": 25, "مطبوخ": 20, "محمر": 5}},
+    {q: "🥩 أفضل نوع لحم", a: {"لحم بقر": 45, "لحم خروف": 35, "دجاج": 15, "لحم جمل": 5}},
+    {q: "🧀 أفضل نوع جبن", a: {"جبن أبيض": 45, "جبن أصفر": 35, "جبن روكفور": 10, "جبن مبشور": 10}},
+    {q: "🥐 أفضل مخبوزات", a: {"كرواسون": 45, "باجيت": 25, "خبز مطلوع": 20, "بريوش": 10}},
+    {q: "🍨 أفضل نكهة آيس كريم", a: {"فانيلا": 40, "شوكولاتة": 35, "فراولة": 15, "بستاشيو": 10}},
+    {q: "🥤 أفضل مشروب غازي", a: {"كوكاكولا": 55, "بيبسي": 25, "سبرايت": 10, "فانتا": 10}},
+    {q: "🍵 أفضل شاي", a: {"شاي أحمر": 50, "شاي أخضر": 25, "شاي بالنعناع": 15, "شاي بالحليب": 10}},
+    {q: "☕ أفضل قهوة", a: {"قهوة عربية": 45, "قهوة تركية": 35, "قهوة أمريكية": 10, "نسكافيه": 10}},
+    {q: "🍳 أفضل طريقة لعمل البيض", a: {"مقلي": 45, "مسلوق": 30, "أومليت": 15, "عيون": 10}},
+    {q: "🥣 أفضل شوربة", a: {"حريرة": 45, "شربة فريك": 30, "شربة عدس": 15, "شوربة خضار": 10}},
+    {q: "🍌 أفضل فاكهة", a: {"تفاح": 35, "موز": 30, "برتقال": 25, "فراولة": 10}},
+    {q: "🥜 أفضل نوع مكسرات", a: {"لوز": 40, "فستق": 35, "كاجو": 15, "جوز": 10}},
+
+    // ======================== السفر والأماكن (15 سؤال) ========================
+    {q: "✈️ أحلام السفر إلى", a: {"دبي": 35, "باريس": 30, "تركيا": 20, "لندن": 15}},
+    {q: "🏖️ أفضل وجهة صيفية داخل الجزائر", a: {"بجاية": 35, "جيجل": 30, "وهران": 20, "عنابة": 15}},
+    {q: "🏔️ أفضل وجهة شتوية داخل الجزائر", a: {"تلمسان": 30, "سطيف": 25, "باتنة": 25, "البليدة": 20}},
+    {q: "🏛️ أفضل مدينة تاريخية في الجزائر", a: {"قسنطينة": 40, "تيمقاد": 30, "جميلة": 20, "تيديس": 10}},
+    {q: "🌊 أفضل شاطئ في الجزائر", a: {"تيقزيرت": 35, "أندلس": 25, "ميلفا": 20, "سيدي فرج": 20}},
+    {q: "🕌 أجمل مسجد في الجزائر", a: {"الجامع الكبير": 35, "مسجد كتشاوة": 30, "المسجد الجديد": 20, "مسجد عبد الحميد بن باديس": 15}},
+    {q: "🏰 أفضل معلم سياحي في الجزائر", a: {"القصبة": 45, "بازيليكا القديس أوغسطين": 25, "مقبرة المسيلة": 15, "الكاليفورنيا": 15}},
+    {q: "🏝️ أفضل جزيرة في الجزائر", a: {"جزر حبيبة": 40, "القرايا": 30, "سيركنا": 20, "رأس أكفادو": 10}},
+    {q: "🌳 أجمل غابة في الجزائر", a: {"غابة بولوغين": 40, "غابة زرالدة": 35, "غابة أكفادو": 15, "غابة جيجل": 10}},
+    {q: "🏞️ أفضل منطقة جبلية", a: {"جورايا": 40, "جبل شناوة": 30, "الأوراس": 20, "جبل عيسى": 10}},
+    {q: "🕌 أفضل مسجد في العالم", a: {"المسجد الحرام": 60, "المسجد النبوي": 30, "الأقصى": 5, "جامع الزيتونة": 5}},
+    {q: "🏙️ أفضل مدينة عربية", a: {"دبي": 40, "القاهرة": 30, "الرياض": 20, "الدوحة": 10}},
+    {q: "🌍 أفضل بلد للسفر", a: {"تركيا": 35, "مصر": 25, "إيطاليا": 20, "إسبانيا": 20}},
+    {q: "🏨 نوع السكن المفضل في السفر", a: {"فندق": 50, "أير بي إن بي": 25, "منزل العائلة": 15, "مخيم": 10}},
+    {q: "✈️ أفضل شركة طيران", a: {"الخطوط الجوية الجزائرية": 40, "تركيش": 30, "الإمارات": 20, "قطر": 10}},
+
+    // ======================== التكنولوجيا والإنترنت (15 سؤال) ========================
+    {q: "📱 ماركة الهاتف المفضلة", a: {"سامسونج": 40, "آيفون": 35, "شاومي": 15, "هواوي": 10}},
+    {q: "💻 نظام التشغيل المفضل", a: {"ويندوز": 60, "ماك": 20, "لينكس": 10, "كروم": 10}},
+    {q: "📷 أفضل تطبيق تواصل اجتماعي", a: {"فيسبوك": 35, "انستغرام": 35, "تيك توك": 20, "سناب شات": 10}},
+    {q: "🎮 أفضل لعبة فيديو", a: {"فورتنايت": 30, "ماين كرافت": 30, "ببجي": 25, "كول أوف ديوتي": 15}},
+    {q: "📧 أفضل تطبيق مراسلة", a: {"واتساب": 70, "ماسنجر": 15, "تيليغرام": 10, "سيغنال": 5}},
+    {q: "🛒 أفضل موقع تسوق أونلاين", a: {"علي إكسبريس": 40, "أمازون": 35, "جوميا": 15, "شوب آند شيب": 10}},
+    {q: "🎬 أفضل منصة لمشاهدة الأفلام", a: {"يوتيوب": 45, "نتفليكس": 35, "شاهد": 15, "أمازون برايم": 5}},
+    {q: "🔍 أفضل محرك بحث", a: {"جوجل": 85, "بينغ": 8, "ياهو": 5, "دك دك غو": 2}},
+    {q: "💾 أفضل خدمة تخزين سحابي", a: {"جوجل درايف": 45, "آي كلاود": 25, "وان درايف": 20, "دروبوكس": 10}},
+    {q: "🎧 أفضل علامة سماعات", a: {"سامسونج": 30, "آبل": 30, "سوني": 25, "جيه بي إل": 15}},
+    {q: "⌚ أفضل ساعة ذكية", a: {"آبل ووتش": 45, "سامسونج جير": 35, "شياومي": 15, "هواوي": 5}},
+    {q: "🎵 أفضل تطبيق للموسيقى", a: {"يوتيوب ميوزيك": 45, "سبوتيفاي": 30, "أنغامي": 15, "أبل ميوزيك": 10}},
+    {q: "📺 أفضل منصة بث", a: {"يوتيوب": 55, "نتفليكس": 25, "تيك توك": 10, "تويش": 10}},
+    {q: "🔒 أفضل كلمة سر استخدمها الناس", a: {"123456": 40, "password": 30, "qwerty": 15, "admin": 15}},
+    {q: "📸 أفضل تطبيق لتعديل الصور", a: {"سناب شات": 40, "انستغرام": 35, "لايت روم": 15, "بيكس آرت": 10}},
+
+    // ======================== العائلة والمنزل (15 سؤال) ========================
+    {q: "👨‍👩‍👧‍👦 عدد أفراد العائلة المثالي", a: {"4-5 أفراد": 45, "3-4 أفراد": 30, "أكثر من 5": 15, "فردين": 10}},
+    {q: "🏠 غرفة المفضلة في المنزل", a: {"غرفة النوم": 45, "غرفة المعيشة": 30, "المطبخ": 15, "الحمام": 10}},
+    {q: "🛋️ أثاث لا يمكن الاستغناء عنه", a: {"السرير": 50, "الكنبة": 25, "الثلاجة": 15, "التلفاز": 10}},
+    {q: "🍳 وقت الطهي المفضل", a: {"المساء": 45, "الظهر": 30, "الصباح": 15, "أي وقت": 10}},
+    {q: "🧹 مهمة التنظيف الأكثر كرهاً", a: {"غسل الصحون": 45, "كنس الأرض": 25, "ترتيب الغرفة": 20, "مسح الغبار": 10}},
+    {q: "👕 كم مرة تغسل ملابسك في الأسبوع", a: {"مرة": 40, "مرتين": 35, "3 مرات": 15, "كل يوم": 10}},
+    {q: "🌿 نبات منزلي تفضله", a: {"صبار": 45, "ورد": 30, "نعناع": 15, "ريحان": 10}},
+    {q: "🐶 حيوان أليف تفضله", a: {"قط": 50, "كلب": 40, "سمك": 5, "طائر": 5}},
+    {q: "☕ شيء تشربه في الصباح", a: {"قهوة": 48, "شاي": 25, "حليب": 17, "عصير": 10}},
+    {q: "🍳 شيء تأكله على الفطور", a: {"بيض": 40, "جبن": 30, "خبز": 20, "زيتون": 10}},
+    {q: "🚗 وسيلة التنقل إلى العمل", a: {"سيارة": 55, "باص": 20, "مترو": 15, "مشي": 10}},
+    {q: "📱 أول شيء تفتحه على هاتفك صباحاً", a: {"واتساب": 45, "انستغرام": 25, "فيسبوك": 20, "تيك توك": 10}},
+    {q: "🛏️ كم ساعة تنام في الليل", a: {"7-8 ساعات": 50, "5-6 ساعات": 25, "أقل من 5": 15, "أكثر من 8": 10}},
+    {q: "🍽️ أكثر وجبة تهمل خلال اليوم", a: {"الفطور": 45, "الغداء": 15, "العشاء": 30, "سناك": 10}},
+    {q: "🧼 أول شيء تفعله عندما تستيقظ", a: {"غسل الوجه": 40, "شرب ماء": 25, "تفقد الهاتف": 25, "الصلاة": 10}},
+    {q: "🚿 في أي وقت تستحم غالباً", a: {"الصباح": 45, "المساء": 40, "الظهر": 10, "أي وقت": 5}},
+    {q: "📺 كم ساعة تشاهد التلفاز يومياً", a: {"1-2 ساعة": 45, "2-3 ساعات": 30, "أقل من ساعة": 15, "أكثر من 3": 10}},
+    {q: "☕ كم كوب قهوة تشرب يومياً", a: {"1-2 كوب": 50, "3-4 أكواب": 25, "لا أشرب": 15, "أكثر من 4": 10}},
+    {q: "🥡 كم مرة تطلب طعاماً جاهزاً في الأسبوع", a: {"مرة": 40, "مرتين": 30, "لا أطلب": 20, "أكثر من 3 مرات": 10}},
+    {q: "🛒 أين تفضل التسوق", a: {"سوبر ماركت": 45, "سوق شعبي": 30, "أونلاين": 15, "محل صغير": 10}},
+    {q: "💰 كم تنفق يومياً في المعدل", a: {"1000-2000 دج": 40, "500-1000 دج": 35, "أقل من 500": 15, "أكثر من 2000": 10}},
+    {q: "🚶 كم خطوة تمشي يومياً", a: {"3000-5000": 40, "5000-10000": 35, "أقل من 3000": 15, "أكثر من 10000": 10}},
+    {q: "🏋️ كم مرة تمارس الرياضة أسبوعياً", a: {"مرة": 35, "مرتين": 30, "لا أمارس": 25, "3 مرات فأكثر": 10}},
+    {q: "📖 كم كتاب تقرأ في السنة", a: {"لا شيء": 45, "1-2 كتاب": 35, "3-5 كتب": 15, "أكثر من 5": 5}},
+    {q: "🍿 أي نوع أفلام تفضل", a: {"أكشن": 40, "كوميدي": 35, "دراما": 15, "رعب": 10}},
+    {q: "🎵 أي نوع موسيقى تفضل", a: {"راب": 40, "عربية": 35, "بوب": 15, "كلاسيكي": 10}},
+    {q: "📱 كم ساعة تقضي على الهاتف يومياً", a: {"2-4 ساعات": 45, "4-6 ساعات": 30, "أقل من ساعتين": 15, "أكثر من 6": 10}},
+    {q: "🛌 في أي وقت تخلد إلى النوم", a: {"10-11 مساءً": 40, "11-12 ليلاً": 35, "بعد 12": 15, "قبل 10": 10}},
+
+    // ======================== الطعام والشراب (20 سؤال) ========================
+    {q: "🍕 الأكلة السريعة المفضلة", a: {"بيتزا": 45, "برجر": 30, "شاورما": 15, "فاست فوكس": 10}},
+    {q: "🍹 مشروب تفضله في الصيف", a: {"عصير بارد": 45, "مشروب غازي": 30, "ماء بارد": 15, "شاي مثلج": 10}},
+    {q: "🍲 الطبق التقليدي المفضل", a: {"كسكس": 55, "شخشوخة": 20, "دوبارة": 15, "رفيس": 10}},
+    {q: "🍰 الحلوى المفضلة", a: {"شوكولاتة": 45, "غريبة": 25, "مقروط": 20, "بسبوسة": 10}},
+    {q: "🥘 أفضل طبق غداء", a: {"طاجين": 40, "كسكس": 35, "مرقة": 15, "مشوي": 10}},
+    {q: "🥗 أفضل سلطة", a: {"سلطة خضراء": 45, "سلطة مشكلة": 30, "سلطة زيتون": 15, "سلطة تونسية": 10}},
+    {q: "🍚 أفضل طبق جانبي", a: {"رز": 45, "بطاطس مقلية": 35, "خبز": 15, "معكرونة": 5}},
+    {q: "🍝 نوع المعكرونة المفضل", a: {"سباغيتي": 50, "بيني": 20, "فيتوتشيني": 15, "لافيي": 15}},
+    {q: "🍗 أفضل طريقة لطهي الدجاج", a: {"مشوي": 50, "مقلي": 25, "مطبوخ": 20, "محمر": 5}},
+    {q: "🥩 أفضل نوع لحم", a: {"لحم بقر": 45, "لحم خروف": 35, "دجاج": 15, "لحم جمل": 5}},
+    {q: "🧀 أفضل نوع جبن", a: {"جبن أبيض": 45, "جبن أصفر": 35, "جبن روكفور": 10, "جبن مبشور": 10}},
+    {q: "🥐 أفضل مخبوزات", a: {"كرواسون": 45, "باجيت": 25, "خبز مطلوع": 20, "بريوش": 10}},
+    {q: "🍨 أفضل نكهة آيس كريم", a: {"فانيلا": 40, "شوكولاتة": 35, "فراولة": 15, "بستاشيو": 10}},
+    {q: "🥤 أفضل مشروب غازي", a: {"كوكاكولا": 55, "بيبسي": 25, "سبرايت": 10, "فانتا": 10}},
+    {q: "🍵 أفضل شاي", a: {"شاي أحمر": 50, "شاي أخضر": 25, "شاي بالنعناع": 15, "شاي بالحليب": 10}},
+    {q: "☕ أفضل قهوة", a: {"قهوة عربية": 45, "قهوة تركية": 35, "قهوة أمريكية": 10, "نسكافيه": 10}},
+    {q: "🍳 أفضل طريقة لعمل البيض", a: {"مقلي": 45, "مسلوق": 30, "أومليت": 15, "عيون": 10}},
+    {q: "🥣 أفضل شوربة", a: {"حريرة": 45, "شربة فريك": 30, "شربة عدس": 15, "شوربة خضار": 10}},
+    {q: "🍌 أفضل فاكهة", a: {"تفاح": 35, "موز": 30, "برتقال": 25, "فراولة": 10}},
+    {q: "🥜 أفضل نوع مكسرات", a: {"لوز": 40, "فستق": 35, "كاجو": 15, "جوز": 10}},
+
+    // ======================== السفر والأماكن (15 سؤال) ========================
+    {q: "✈️ أحلام السفر إلى", a: {"دبي": 35, "باريس": 30, "تركيا": 20, "لندن": 15}},
+    {q: "🏖️ أفضل وجهة صيفية داخل الجزائر", a: {"بجاية": 35, "جيجل": 30, "وهران": 20, "عنابة": 15}},
+    {q: "🏔️ أفضل وجهة شتوية داخل الجزائر", a: {"تلمسان": 30, "سطيف": 25, "باتنة": 25, "البليدة": 20}},
+    {q: "🏛️ أفضل مدينة تاريخية في الجزائر", a: {"قسنطينة": 40, "تيمقاد": 30, "جميلة": 20, "تيديس": 10}},
+    {q: "🌊 أفضل شاطئ في الجزائر", a: {"تيقزيرت": 35, "أندلس": 25, "ميلفا": 20, "سيدي فرج": 20}},
+    {q: "🕌 أجمل مسجد في الجزائر", a: {"الجامع الكبير": 35, "مسجد كتشاوة": 30, "المسجد الجديد": 20, "مسجد عبد الحميد بن باديس": 15}},
+    {q: "🏰 أفضل معلم سياحي في الجزائر", a: {"القصبة": 45, "بازيليكا القديس أوغسطين": 25, "مقبرة المسيلة": 15, "الكاليفورنيا": 15}},
+    {q: "🏝️ أفضل جزيرة في الجزائر", a: {"جزر حبيبة": 40, "القرايا": 30, "سيركنا": 20, "رأس أكفادو": 10}},
+    {q: "🌳 أجمل غابة في الجزائر", a: {"غابة بولوغين": 40, "غابة زرالدة": 35, "غابة أكفادو": 15, "غابة جيجل": 10}},
+    {q: "🏞️ أفضل منطقة جبلية", a: {"جورايا": 40, "جبل شناوة": 30, "الأوراس": 20, "جبل عيسى": 10}},
+    {q: "🕌 أفضل مسجد في العالم", a: {"المسجد الحرام": 60, "المسجد النبوي": 30, "الأقصى": 5, "جامع الزيتونة": 5}},
+    {q: "🏙️ أفضل مدينة عربية", a: {"دبي": 40, "القاهرة": 30, "الرياض": 20, "الدوحة": 10}},
+    {q: "🌍 أفضل بلد للسفر", a: {"تركيا": 35, "مصر": 25, "إيطاليا": 20, "إسبانيا": 20}},
+    {q: "🏨 نوع السكن المفضل في السفر", a: {"فندق": 50, "أير بي إن بي": 25, "منزل العائلة": 15, "مخيم": 10}},
+    {q: "✈️ أفضل شركة طيران", a: {"الخطوط الجوية الجزائرية": 40, "تركيش": 30, "الإمارات": 20, "قطر": 10}},
+
+    // ======================== التكنولوجيا والإنترنت (15 سؤال) ========================
+    {q: "📱 ماركة الهاتف المفضلة", a: {"سامسونج": 40, "آيفون": 35, "شاومي": 15, "هواوي": 10}},
+    {q: "💻 نظام التشغيل المفضل", a: {"ويندوز": 60, "ماك": 20, "لينكس": 10, "كروم": 10}},
+    {q: "📷 أفضل تطبيق تواصل اجتماعي", a: {"فيسبوك": 35, "انستغرام": 35, "تيك توك": 20, "سناب شات": 10}},
+    {q: "🎮 أفضل لعبة فيديو", a: {"فورتنايت": 30, "ماين كرافت": 30, "ببجي": 25, "كول أوف ديوتي": 15}},
+    {q: "📧 أفضل تطبيق مراسلة", a: {"واتساب": 70, "ماسنجر": 15, "تيليغرام": 10, "سيغنال": 5}},
+    {q: "🛒 أفضل موقع تسوق أونلاين", a: {"علي إكسبريس": 40, "أمازون": 35, "جوميا": 15, "شوب آند شيب": 10}},
+    {q: "🎬 أفضل منصة لمشاهدة الأفلام", a: {"يوتيوب": 45, "نتفليكس": 35, "شاهد": 15, "أمازون برايم": 5}},
+    {q: "🔍 أفضل محرك بحث", a: {"جوجل": 85, "بينغ": 8, "ياهو": 5, "دك دك غو": 2}},
+    {q: "💾 أفضل خدمة تخزين سحابي", a: {"جوجل درايف": 45, "آي كلاود": 25, "وان درايف": 20, "دروبوكس": 10}},
+    {q: "🎧 أفضل علامة سماعات", a: {"سامسونج": 30, "آبل": 30, "سوني": 25, "جيه بي إل": 15}},
+    {q: "⌚ أفضل ساعة ذكية", a: {"آبل ووتش": 45, "سامسونج جير": 35, "شياومي": 15, "هواوي": 5}},
+    {q: "🎵 أفضل تطبيق للموسيقى", a: {"يوتيوب ميوزيك": 45, "سبوتيفاي": 30, "أنغامي": 15, "أبل ميوزيك": 10}},
+    {q: "📺 أفضل منصة بث", a: {"يوتيوب": 55, "نتفليكس": 25, "تيك توك": 10, "تويش": 10}},
+    {q: "🔒 أفضل كلمة سر استخدمها الناس", a: {"123456": 40, "password": 30, "qwerty": 15, "admin": 15}},
+    {q: "📸 أفضل تطبيق لتعديل الصور", a: {"سناب شات": 40, "انستغرام": 35, "لايت روم": 15, "بيكس آرت": 10}},
+
+    // ======================== المال والعمل (10 سؤال) ========================
+    {q: "💰 المهنة الأكثر احتراماً في المجتمع", a: {"طبيب": 50, "مهندس": 25, "أستاذ": 15, "محامي": 10}},
+    {q: "💸 أكثر المصاريف الشهرية", a: {"الطعام": 45, "الإيجار": 30, "المواصلات": 15, "الملابس": 10}},
+    {q: "🏦 أفضل طريقة للادخار", a: {"بنك": 45, "جمعية": 25, "ذهب": 20, "عقار": 10}},
+    {q: "💳 وسيلة الدفع المفضلة", a: {"نقدي": 50, "بطاقة بنكية": 30, "هاتف": 15, "شيك": 5}},
+    {q: "💼 صفة مهمة في العمل", a: {"أمانة": 45, "اجتهاد": 35, "إبداع": 15, "قيادة": 5}},
+    {q: "🕐 ساعات العمل المثالية يومياً", a: {"8 ساعات": 50, "6 ساعات": 30, "7 ساعات": 15, "أقل من 6": 5}},
+    {q: "💼 أفضل مجال عمل", a: {"تكنولوجيا": 40, "طب": 30, "تعليم": 20, "هندسة": 10}},
+    {q: "💸 قيمة الراتب المثالي شهرياً", a: {"أكثر من 10 مليون": 45, "5-10 مليون": 35, "3-5 مليون": 15, "أقل من 3": 5}},
+    {q: "🏢 مكان العمل المفضل", a: {"منزل": 45, "مكتب": 35, "ميدان": 15, "كافيه": 5}},
+    {q: "📈 أفضل استثمار للمستقبل", a: {"عقار": 50, "ذهب": 25, "بزنس": 15, "سندات": 10}},
+
+    // ======================== الصحة والرياضة (10 سؤال) ========================
+    {q: "💪 أفضل رياضة للحفاظ على اللياقة", a: {"جري": 40, "سباحة": 30, "تمارين منزلية": 20, "كرة قدم": 10}},
+    {q: "🥗 أفضل نظام غذائي صحي", a: {"خضار وفواكه": 45, "بروتين": 25, "قليل الكربوهيدرات": 20, "صيام متقطع": 10}},
+    {q: "💊 فيتامين تفضله", a: {"فيتامين سي": 40, "فيتامين د": 35, "فيتامين ب": 15, "فيتامين هـ": 10}},
+    {q: "🩺 عدد مرات زيارة الطبيب في السنة", a: {"مرة": 45, "لا شيء": 30, "مرتين": 15, "أكثر من 3": 10}},
+    {q: "😴 كم ساعة نوم تحتاج يومياً", a: {"8 ساعات": 50, "7 ساعات": 30, "6 ساعات": 15, "أكثر من 8": 5}},
+    {q: "🚭 عادة تريد التخلص منها", a: {"تدخين": 60, "نتف هاتف": 20, "سهر": 15, "أكل زائد": 5}},
+    {q: "💧 كم لتر ماء تشرب يومياً", a: {"2-3 لتر": 45, "1-2 لتر": 35, "أقل من لتر": 15, "أكثر من 3": 5}},
+    {q: "🏋️ أفضل وقت للرياضة", a: {"الصباح": 45, "المساء": 40, "الظهر": 10, "أي وقت": 5}},
+    {q: "🧘 أفضل نشاط للاسترخاء", a: {"مشي": 40, "قراءة": 30, "يوغا": 15, "تأمل": 15}},
+    {q: "🥤 مشروب صحي تفضله", a: {"ماء": 55, "عصير طبيعي": 30, "شاي أخضر": 10, "حليب": 5}},
+
+    // ======================== التعليم والمعرفة (10 سؤال) ========================
+    {q: "📚 أحب مادة دراسية", a: {"رياضيات": 35, "عربية": 30, "علوم": 20, "تاريخ": 15}},
+    {q: "🎓 المرحلة الدراسية المفضلة", a: {"جامعة": 40, "ثانوية": 30, "متوسطة": 20, "ابتدائية": 10}},
+    {q: "📖 كم ساعة تدرس في اليوم", a: {"1-2 ساعة": 45, "2-3 ساعات": 30, "أقل من ساعة": 15, "أكثر من 3": 10}},
+    {q: "📝 أفضل طريقة للمذاكرة", a: {"قراءة": 40, "كتابة": 35, "سماع": 15, "مجموعات": 10}},
+    {q: "📱 أفضل تطبيق تعليمي", a: {"يوتيوب": 60, "دوروس": 20, "أكاديمية خان": 10, "كورسيرا": 10}},
+    {q: "🗣️ أفضل لغة للتعلم", a: {"إنجليزية": 60, "فرنسية": 25, "إسبانية": 10, "ألمانية": 5}},
+    {q: "🎓 الشهادة الأعلى التي تطمح لها", a: {"ماجستير": 45, "دكتوراه": 35, "بكالوريوس": 15, "دبلوم": 5}},
+    {q: "🏫 أفضل جامعة في الجزائر", a: {"جامعة الجزائر": 40, "جامعة وهران": 25, "جامعة قسنطينة": 20, "جامعة سطيف": 15}},
+    {q: "📋 أصعب امتحان في الحياة", a: {"بكالوريا": 70, "جامعة": 15, "قيادة": 10, "مهني": 5}},
+    {q: "🎓 أكثر تخصص مطلوب", a: {"طب": 45, "إعلام آلي": 30, "هندسة": 15, "إدارة أعمال": 10}},
+
+    // ======================== الأمنيات والأحلام (10 سؤال) ========================
+    {q: "💭 الحلم الأكبر في الحياة", a: {"بيت": 35, "سيارة": 30, "سفر": 20, "زواج": 15}},
+    {q: "🌍 أمنية لو تحققت", a: {"السفر حول العالم": 40, "شراء منزل": 35, "بدء مشروع": 15, "النجاح الدراسي": 10}},
+    {q: "💰 لو ربحت 100 مليون دينار", a: {"شراء منزل": 40, "سفر": 25, "استثمار": 20, "مساعدة الآخرين": 15}},
+    {q: "🎁 أمنية عيد الميلاد", a: {"مال": 35, "هاتف": 30, "سيارة": 25, "سفر": 10}},
+    {q: "🕰️ لو عاد بك الزمن", a: {"أدرس أكثر": 45, "أسافر أكثر": 25, "أستثمر": 20, "أتزوج مبكراً": 10}},
+    {q: "💼 المشروع الذي تحلم به", a: {"مطعم": 40, "بزنس أونلاين": 30, "متجر ملابس": 20, "صالون": 10}},
+    {q: "👤 الشخص الذي تتمنى لقاءه", a: {"ميسي": 30, "رياض محرز": 25, "جاكسون": 25, "بيل غيتس": 20}},
+    {q: "🏆 الإنجاز الذي تفتخر به", a: {"شهادة": 45, "عمل": 30, "بيت": 15, "زواج": 10}},
+    {q: "👨‍👩‍👧‍👦 الشيء الأهم في الحياة", a: {"العائلة": 55, "الصحة": 30, "المال": 10, "الأصدقاء": 5}},
+    {q: "🌟 سر السعادة", a: {"الرضا": 45, "المال": 25, "العائلة": 20, "الصحة": 10}},
+    {q: "👵 من تشعر بالقرب منه في العائلة", a: {"الأم": 45, "الأب": 25, "الأخ": 15, "الأخت": 15}},
+    {q: "🎁 أفضل هدية للوالدين", a: {"ملابس": 35, "عطر": 35, "مال": 20, "طعام": 10}},
+    {q: "🏡 نوع المنزل المفضل", a: {"فيلا": 45, "شقة": 35, "بيت تقليدي": 15, "دوبلكس": 5}},
+    {q: "🔑 كم مفتاحاً تحمل معك عادةً", a: {"مفتاحان": 40, "مفتاح واحد": 35, "3 مفاتيح": 15, "أكثر من 3": 10}},
+    {q: "🚪 كم باباً في منزلك", a: {"4-6 أبواب": 40, "7-10 أبواب": 35, "أقل من 4": 15, "أكثر من 10": 10}},
+    {q: "💡 كم لمبة في بيتك", a: {"10-15 لمبة": 40, "15-20 لمبة": 35, "أقل من 10": 15, "أكثر من 20": 10}},
+
+    // ======================== المال والعمل (10 سؤال) ========================
+    {q: "💰 المهنة الأكثر احتراماً في المجتمع", a: {"طبيب": 50, "مهندس": 25, "أستاذ": 15, "محامي": 10}},
+    {q: "💸 أكثر المصاريف الشهرية", a: {"الطعام": 45, "الإيجار": 30, "المواصلات": 15, "الملابس": 10}},
+    {q: "🏦 أفضل طريقة للادخار", a: {"بنك": 45, "جمعية": 25, "ذهب": 20, "عقار": 10}},
+    {q: "💳 وسيلة الدفع المفضلة", a: {"نقدي": 50, "بطاقة بنكية": 30, "هاتف": 15, "شيك": 5}},
+    {q: "💼 صفة مهمة في العمل", a: {"أمانة": 45, "اجتهاد": 35, "إبداع": 15, "قيادة": 5}},
+    {q: "🕐 ساعات العمل المثالية يومياً", a: {"8 ساعات": 50, "6 ساعات": 30, "7 ساعات": 15, "أقل من 6": 5}},
+    {q: "💼 أفضل مجال عمل", a: {"تكنولوجيا": 40, "طب": 30, "تعليم": 20, "هندسة": 10}},
+    {q: "💸 قيمة الراتب المثالي شهرياً", a: {"أكثر من 10 مليون": 45, "5-10 مليون": 35, "3-5 مليون": 15, "أقل من 3": 5}},
+    {q: "🏢 مكان العمل المفضل", a: {"منزل": 45, "مكتب": 35, "ميدان": 15, "كافيه": 5}},
+    {q: "📈 أفضل استثمار للمستقبل", a: {"عقار": 50, "ذهب": 25, "بزنس": 15, "سندات": 10}},
+
+    // ======================== الصحة والرياضة (10 سؤال) ========================
+    {q: "💪 أفضل رياضة للحفاظ على اللياقة", a: {"جري": 40, "سباحة": 30, "تمارين منزلية": 20, "كرة قدم": 10}},
+    {q: "🥗 أفضل نظام غذائي صحي", a: {"خضار وفواكه": 45, "بروتين": 25, "قليل الكربوهيدرات": 20, "صيام متقطع": 10}},
+    {q: "💊 فيتامين تفضله", a: {"فيتامين سي": 40, "فيتامين د": 35, "فيتامين ب": 15, "فيتامين هـ": 10}},
+    {q: "🩺 عدد مرات زيارة الطبيب في السنة", a: {"مرة": 45, "لا شيء": 30, "مرتين": 15, "أكثر من 3": 10}},
+    {q: "😴 كم ساعة نوم تحتاج يومياً", a: {"8 ساعات": 50, "7 ساعات": 30, "6 ساعات": 15, "أكثر من 8": 5}},
+    {q: "🚭 عادة تريد التخلص منها", a: {"تدخين": 60, "نتف هاتف": 20, "سهر": 15, "أكل زائد": 5}},
+    {q: "💧 كم لتر ماء تشرب يومياً", a: {"2-3 لتر": 45, "1-2 لتر": 35, "أقل من لتر": 15, "أكثر من 3": 5}},
+    {q: "🏋️ أفضل وقت للرياضة", a: {"الصباح": 45, "المساء": 40, "الظهر": 10, "أي وقت": 5}},
+    {q: "🧘 أفضل نشاط للاسترخاء", a: {"مشي": 40, "قراءة": 30, "يوغا": 15, "تأمل": 15}},
+    {q: "🥤 مشروب صحي تفضله", a: {"ماء": 55, "عصير طبيعي": 30, "شاي أخضر": 10, "حليب": 5}},
+
+
+    {q: "📚 أحب مادة دراسية", a: {"رياضيات": 35, "عربية": 30, "علوم": 20, "تاريخ": 15}},
+    {q: "🎓 المرحلة الدراسية المفضلة", a: {"جامعة": 40, "ثانوية": 30, "متوسطة": 20, "ابتدائية": 10}},
+    {q: "📖 كم ساعة تدرس في اليوم", a: {"1-2 ساعة": 45, "2-3 ساعات": 30, "أقل من ساعة": 15, "أكثر من 3": 10}},
+    {q: "📝 أفضل طريقة للمذاكرة", a: {"قراءة": 40, "كتابة": 35, "سماع": 15, "مجموعات": 10}},
+    {q: "📱 أفضل تطبيق تعليمي", a: {"يوتيوب": 60, "دوروس": 20, "أكاديمية خان": 10, "كورسيرا": 10}},
+    {q: "🗣️ أفضل لغة للتعلم", a: {"إنجليزية": 60, "فرنسية": 25, "إسبانية": 10, "ألمانية": 5}},
+    {q: "🎓 الشهادة الأعلى التي تطمح لها", a: {"ماجستير": 45, "دكتوراه": 35, "بكالوريوس": 15, "دبلوم": 5}},
+    {q: "🏫 أفضل جامعة في الجزائر", a: {"جامعة الجزائر": 40, "جامعة وهران": 25, "جامعة قسنطينة": 20, "جامعة سطيف": 15}},
+    {q: "📋 أصعب امتحان في الحياة", a: {"بكالوريا": 70, "جامعة": 15, "قيادة": 10, "مهني": 5}},
+    {q: "🎓 أكثر تخصص مطلوب", a: {"طب": 45, "إعلام آلي": 30, "هندسة": 15, "إدارة أعمال": 10}},
+
+  
+    {q: "💭 الحلم الأكبر في الحياة", a: {"بيت": 35, "سيارة": 30, "سفر": 20, "زواج": 15}},
+    {q: "🌍 أمنية لو تحققت", a: {"السفر حول العالم": 40, "شراء منزل": 35, "بدء مشروع": 15, "النجاح الدراسي": 10}},
+    {q: "💰 لو ربحت 100 مليون دينار", a: {"شراء منزل": 40, "سفر": 25, "استثمار": 20, "مساعدة الآخرين": 15}},
+    {q: "🎁 أمنية عيد الميلاد", a: {"مال": 35, "هاتف": 30, "سيارة": 25, "سفر": 10}},
+    {q: "🕰️ لو عاد بك الزمن", a: {"أدرس أكثر": 45, "أسافر أكثر": 25, "أستثمر": 20, "أتزوج مبكراً": 10}},
+    {q: "💼 المشروع الذي تحلم به", a: {"مطعم": 40, "بزنس أونلاين": 30, "متجر ملابس": 20, "صالون": 10}},
+    {q: "👤 الشخص الذي تتمنى لقاءه", a: {"ميسي": 30, "رياض محرز": 25, "جاكسون": 25, "بيل غيتس": 20}},
+    {q: "🏆 الإنجاز الذي تفتخر به", a: {"شهادة": 45, "عمل": 30, "بيت": 15, "زواج": 10}},
+    {q: "👨‍👩‍👧‍👦 الشيء الأهم في الحياة", a: {"العائلة": 55, "الصحة": 30, "المال": 10, "الأصدقاء": 5}},
+    {q: "🌟 سر السعادة", a: {"الرضا": 45, "المال": 25, "العائلة": 20, "الصحة": 10}},,
+    {q: "👟 شيء تحتاجه للرياضة", a: {"حذاء": 40, "ملابس": 30, "كرة": 20, "ماء": 10}},
+
+    {q: "🚓 وظيفة معروفة", a: {"شرطي": 40, "طبيب": 30, "معلم": 20, "سائق": 10}},
+    {q: "🏥 مكان للعلاج", a: {"مستشفى": 50, "عيادة": 30, "صيدلية": 20, "بيت": 0}},
+    {q: "💊 دواء معروف", a: {"باراسيتامول": 40, "أسبرين": 30, "مضاد": 20, "فيتامين": 10}},
+
+    {q: "💻 جهاز إلكتروني", a: {"هاتف": 50, "حاسوب": 30, "تلفاز": 10, "تابلت": 10}},
+    {q: "🔌 شيء يحتاج كهرباء", a: {"تلفاز": 40, "ثلاجة": 30, "حاسوب": 20, "غسالة": 10}},
+    {q: "📡 شيء فيه إنترنت", a: {"هاتف": 50, "حاسوب": 30, "راوتر": 10, "تلفاز": 10}},
+        {q: "🥤 مشروب غازي مشهور", a: {"كوكاكولا": 50, "بيبسي": 30, "سبرايت": 12, "فانتا": 8}},
+        {q: "🧼 جهاز في المطبخ لغسل الصحون", a: {"غسالة": 45, "جلية": 25, "صابون": 15, "سفنجة": 15}},
+        {q: "🚗 وسيلة نقل شهيرة", a: {"سيارة": 55, "باص": 20, "دراجة": 15, "قطار": 10}},
+        {q: "🐱 حيوان أليف مفضل", a: {"قط": 45, "كلب": 40, "سمك": 10, "هامستر": 5}},
+        {q: "📚 مادة دراسية", a: {"رياضيات": 40, "عربي": 25, "علوم": 20, "تاريخ": 15}},
+        {q: "🏫 مكان الدراسة", a: {"مدرسة": 60, "جامعة": 25, "معهد": 10, "بيت": 5}},
+    ];
+
+    // ======================== قاموس المرادفات (يمكنك إضافة المزيد) ========================
+    const synonymMap = {
+        "قهوة": ["قهوي", "قهوه", "qahwa", "coffee"],
+        "شاي": ["شاى", "شاهي", "tea"],
+        "بيتزا": ["بيتزة", "pizza"],
+        "برجر": ["برغر", "burger"],
+        "غسالة": ["غسال", "غسله", "غاسلة", "غسالة صحون"],
+        "سيارة": ["سياره", "سيار", "سيرة", "car", "عربية"],
+        "قط": ["قطة", "بسبس", "cat"],
+        "كلب": ["كلبة", "dog"],
+        "تفاح": ["تفاحة", "apple"],
+        "موز": ["موزة", "banana"],
+    };
+
+    // ======================== الدوال الذكية لتصحيح الأخطاء ========================
+    
+    // دالة التطبيع الأساسية
+    function normalizeWord(word) {
+        if (!word) return "";
+        let normalized = word.trim().toLowerCase();
+        normalized = normalized.replace(/^(ال|ال)/, '');
+        normalized = normalized.replace(/[ةه]$/, '');
+        normalized = normalized.replace(/[ىي]$/, 'ا');
+        normalized = normalized.replace(/[ًًٌٍَُِّّْ]/, '');
+        return normalized;
     }
-    currentRoom = Math.floor(1000 + Math.random() * 9000).toString();
-    isHost = true;
-    db.ref('rooms/' + currentRoom).set({ 
-        status: 'waiting', 
-        qIndex: 0, 
-        players: { [myId]: { name: myName, score: 0, found: [] } }, 
-        timer: 45, 
-        questions: null 
-    })
-    .then(() => { 
-        showScreen('waitingScreen'); 
-        document.getElementById('roomCode').innerText = currentRoom; 
-        listenToRoom(); 
-        showNotification(`✅ تم إنشاء الغرفة! الرمز: ${currentRoom}`); 
-    })
-    .catch(() => showNotification("❌ خطأ في الاتصال!", "error"));
-}
 
-// Join Room
-function joinRoom() {
-    myName = document.getElementById('userName').value.trim();
-    const rCode = document.getElementById('roomInput').value.trim();
-    if(!myName || rCode.length !== 4) { 
-        showNotification("⚠️ تأكد من الاسم ورمز الغرفة!", "error"); 
-        return; 
+    // 1. دالة لتحليل الكلمات ومعرفة جذورها
+    function getWordRoot(word) {
+        let w = word.toLowerCase().trim();
+        w = w.replace(/^ال/, '');
+        w = w.replace(/[ةه]$/, '');
+        w = w.replace(/[ىي]$/, 'ا');
+        w = w.replace(/[يي]$/, '');
+        return w;
     }
-    db.ref('rooms/' + rCode).once('value', snap => {
-        if(snap.exists()) {
-            if(Object.keys(snap.val().players).length >= 4) { 
-                showNotification("❌ الغرفة ممتلئة (4/4)!", "error"); 
-                return; 
+
+    // 2. دالة لحساب التشابه بين الكلمات (خوارزمية ليفنشتاين)
+    function similarityScore(a, b) {
+        if (!a || !b) return 0;
+        a = a.toLowerCase();
+        b = b.toLowerCase();
+        if (a === b) return 1;
+        
+        const track = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
+        for (let i = 0; i <= a.length; i++) track[0][i] = i;
+        for (let j = 0; j <= b.length; j++) track[j][0] = j;
+        
+        for (let j = 1; j <= b.length; j++) {
+            for (let i = 1; i <= a.length; i++) {
+                const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+                track[j][i] = Math.min(
+                    track[j][i - 1] + 1,
+                    track[j - 1][i] + 1,
+                    track[j - 1][i - 1] + indicator
+                );
             }
-            currentRoom = rCode;
-            db.ref('rooms/' + currentRoom + '/players/' + myId).set({ name: myName, score: 0, found: [] });
+        }
+        const distance = track[b.length][a.length];
+        const maxLen = Math.max(a.length, b.length);
+        return 1 - (distance / maxLen);
+    }
+
+    // 3. الدالة المتقدمة لمطابقة أي كلمة جديدة (تعمل تلقائياً مع الأخطاء)
+    function advancedMatch(userAnswer, correctAnswer) {
+        if (!userAnswer || !correctAnswer) return false;
+        
+        const user = userAnswer.trim().toLowerCase();
+        const correct = correctAnswer.trim().toLowerCase();
+        
+        // 1. تطابق تام
+        if (user === correct) return true;
+        
+        // 2. تطابق بعد التطبيع الأساسي
+        if (normalizeWord(user) === normalizeWord(correct)) return true;
+        
+        // 3. تطابق جذر الكلمة
+        if (getWordRoot(user) === getWordRoot(correct)) return true;
+        
+        // 4. التشابه العالي (80% أو أكثر) - يقبل الأخطاء البسيطة
+        if (similarityScore(user, correct) >= 0.80) return true;
+        
+        // 5. البحث في المرادفات المسجلة
+        for (let key in synonymMap) {
+            if (correct === key && synonymMap[key].includes(user)) return true;
+            if (user === key && synonymMap[key].includes(correct)) return true;
+        }
+        
+        // 6. التحقق من الكلمات التي تختلف بحرف واحد فقط
+        if (user.length === correct.length) {
+            let diffCount = 0;
+            for (let i = 0; i < user.length; i++) {
+                if (user[i] !== correct[i]) diffCount++;
+            }
+            if (diffCount === 1) return true;
+        }
+        
+        // 7. إضافة أو حذف حرف واحد
+        if (Math.abs(user.length - correct.length) === 1) {
+            const shorter = user.length < correct.length ? user : correct;
+            const longer = user.length < correct.length ? correct : user;
+            for (let i = 0; i < longer.length; i++) {
+                const testWord = longer.slice(0, i) + longer.slice(i + 1);
+                if (testWord === shorter) return true;
+            }
+        }
+        
+        return false;
+    }
+
+    // 8. دالة المطابقة الرئيسية
+    function isMatchingAnswer(userAnswer, correctAnswer) {
+        return advancedMatch(userAnswer, correctAnswer);
+    }
+
+    // دوال إنشاء العناصر المتحركة
+    function createParticles() {
+        const container = document.getElementById('particles');
+        for(let i=0;i<30;i++) {
+            let p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random()*100+'%';
+            p.style.width = (Math.random()*15+5)+'px';
+            p.style.height = p.style.width;
+            p.style.background = `radial-gradient(circle, #ff6b6b, #a855f7)`;
+            p.style.animationDelay = Math.random()*15+'s';
+            container.appendChild(p);
+        }
+    }
+    
+    function createBubbles() {
+        const cont = document.getElementById('bubbles');
+        for(let i=0;i<20;i++) {
+            let b = document.createElement('div');
+            b.className = 'bubble';
+            b.style.left = Math.random()*100+'%';
+            b.style.width = (Math.random()*40+20)+'px';
+            b.style.height = b.style.width;
+            b.style.animationDelay = Math.random()*8+'s';
+            cont.appendChild(b);
+        }
+    }
+    
+    createParticles();
+    createBubbles();
+
+    // دوال مساعدة
+    function showNotification(msg, type="success") {
+        let notif = document.createElement('div');
+        notif.className = `notification ${type}`;
+        notif.innerText = msg;
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 2800);
+    }
+    
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    function getRandomQuestions(count) {
+        let shuffled = [...allQuestions];
+        for(let i=shuffled.length-1;i>0;i--){
+            let j=Math.floor(Math.random()*(i+1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled.slice(0, count);
+    }
+
+    // دوال اللعبة
+    function createRoom() {
+        myName = document.getElementById('userName').value.trim();
+        if(!myName) { showNotification("✏️ اكتب اسمك أولاً!", "error"); return; }
+        currentRoom = Math.floor(1000+Math.random()*9000).toString();
+        isHost = true;
+        db.ref('rooms/'+currentRoom).set({ 
+            status:'waiting', 
+            qIndex:0, 
+            players:{ [myId]:{ name:myName, score:0, found:[] } }, 
+            timer:45, 
+            questions:null 
+        }).then(()=>{ 
             showScreen('waitingScreen'); 
-            document.getElementById('roomCode').innerText = currentRoom; 
-            listenToRoom();
-            showNotification(`✅ انضممت إلى الغرفة ${rCode}`);
-        } else { 
-            showNotification("❌ الغرفة غير موجودة!", "error"); 
-        }
-    });
-}
-
-// Listen to Room Updates
-function listenToRoom() {
-    db.ref('rooms/' + currentRoom).on('value', snap => {
-        const data = snap.val();
-        if(!data) return;
-        const players = data.players;
-        const playerCount = Object.keys(players).length;
-        const pList = document.getElementById('playerList');
-        pList.innerHTML = "";
-        for(let id in players) {
-            const isYou = id === myId;
-            pList.innerHTML += `
-                <div class="player-card ${isYou ? 'you' : ''}">
-                    <div class="player-name">
-                        ${isYou ? '👤' : '👥'} ${players[id].name}
-                    </div>
-                    <div class="player-score">⭐ ${players[id].score}</div>
-                </div>`;
-        }
-        document.getElementById('waitingProgress').style.width = (playerCount / 4) * 100 + '%';
-        if(isHost && playerCount >= 2) { 
-            document.getElementById('startBtn').classList.remove('hidden'); 
-            document.getElementById('waitingMsg').innerHTML = "✅ جاهز! اضغط بدء اللعبة";
-        }
-        if(data.status === 'playing' && document.getElementById('gameScreen').classList.contains('hidden')) {
-            showScreen('gameScreen');
-        }
-        if(data.status === 'playing') updateGameUI(data);
-        if(data.status === 'finished') { 
-            clearInterval(timerInterval); 
-            showFinalResults(players); 
-        }
-    });
-}
-
-// Start Game
-function startGame() {
-    currentGameQuestions = getRandomQuestions(4);
-    db.ref('rooms/' + currentRoom).update({ 
-        status: 'playing', 
-        qIndex: 0, 
-        timer: 45, 
-        questions: currentGameQuestions 
-    });
-    startTimer();
-    showNotification("🎮 بدأت اللعبة! حظاً موفقاً!");
-}
-
-// Timer
-function startTimer() {
-    if(timerInterval) clearInterval(timerInterval);
-    let timeLeft = 45;
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        db.ref('rooms/' + currentRoom).update({ timer: timeLeft });
-        const display = document.getElementById('timeLeftDisplay');
-        if(display) display.innerText = timeLeft;
-        const progressPercent = (timeLeft / 45) * 100;
-        document.getElementById('questionProgress').style.width = progressPercent + '%';
-        if(timeLeft <= 5 && timeLeft > 0) { 
-            if(lastTimerSecond !== timeLeft) playWarningBeep(); 
-            display?.classList.add('warning-timer');
-        } else display?.classList.remove('warning-timer');
-        if(timeLeft === 0) { 
-            clearInterval(timerInterval); 
-            playTimeoutAlarm(); 
-            nextQuestionOrFinish(); 
-        }
-        lastTimerSecond = timeLeft;
-    }, 1000);
-}
-
-// Update Game UI
-function updateGameUI(data) {
-    const questions = data.questions || currentGameQuestions;
-    if(!questions.length) return;
-    const qData = questions[data.qIndex];
-    if(!qData) return;
-    document.getElementById('questionText').innerText = qData.q;
-    document.getElementById('qCount').innerText = `${data.qIndex + 1}`;
-    document.getElementById('totalQ').innerText = '4';
-    document.getElementById('timeLeftDisplay').innerText = data.timer;
-    document.getElementById('myScoreDisplay').innerText = data.players[myId]?.score || 0;
-    const myFound = data.players[myId]?.found || [];
-    const board = document.getElementById('answersBoard');
-    board.innerHTML = "";
-    let idx = 1;
-    for(let ans in qData.a) {
-        const isFound = myFound.includes(ans);
-        board.innerHTML += `
-            <div class="ans-item ${isFound ? 'found' : ''}">
+            document.getElementById('roomCode').innerText=currentRoom; 
+            listenToRoom(); 
+            showNotification(`✅ تم إنشاء الغرفة! الرمز: ${currentRoom}`); 
+        });
+    }
+    
+    function joinRoom() {
+        myName = document.getElementById('userName').value.trim();
+        let rCode = document.getElementById('roomInput').value.trim();
+        if(!myName || rCode.length!==4) { showNotification("⚠️ تأكد من الاسم والرمز!","error"); return; }
+        db.ref('rooms/'+rCode).once('value', snap=>{
+            if(snap.exists()){
+                if(Object.keys(snap.val().players).length>=4) { showNotification("❌ الغرفة ممتلئة!","error"); return; }
+                currentRoom = rCode;
+                db.ref('rooms/'+currentRoom+'/players/'+myId).set({ name:myName, score:0, found:[] });
+                showScreen('waitingScreen'); 
+                document.getElementById('roomCode').innerText=currentRoom; 
+                listenToRoom();
+                showNotification(`✅ انضممت إلى الغرفة ${rCode}`);
+            } else showNotification("❌ الغرفة غير موجودة!","error");
+        });
+    }
+    
+    function listenToRoom() {
+        db.ref('rooms/'+currentRoom).on('value', snap=>{
+            let data=snap.val(); 
+            if(!data) return;
+            let players=data.players;
+            let plist=document.getElementById('playerList'); 
+            plist.innerHTML="";
+            for(let id in players){
+                plist.innerHTML+=`<div class="player-card ${id===myId?'you':''}"><div>${id===myId?'👤':'👥'} ${players[id].name}</div><div>⭐ ${players[id].score}</div></div>`;
+            }
+            if(isHost && Object.keys(players).length>=2) document.getElementById('startBtn').hidden=false;
+            if(data.status==='playing' && document.getElementById('gameScreen').classList.contains('hidden')) {
+                showScreen('gameScreen');
+            }
+            if(data.status==='playing') updateGameUI(data);
+            if(data.status==='finished') { 
+                clearInterval(timerInterval); 
+                showFinalResults(players); 
+            }
+        });
+    }
+    
+    function startGame() {
+        currentGameQuestions = getRandomQuestions(4);
+        db.ref('rooms/'+currentRoom).update({ 
+            status:'playing', 
+            qIndex:0, 
+            timer:45, 
+            questions:currentGameQuestions 
+        });
+        startTimer();
+        showNotification("🎮 بدأت اللعبة! حظاً موفقاً!");
+    }
+    
+    function startTimer() {
+        if(timerInterval) clearInterval(timerInterval);
+        let timeLeft=45;
+        timerInterval = setInterval(()=>{
+            timeLeft--;
+            db.ref('rooms/'+currentRoom).update({ timer:timeLeft });
+            if(document.getElementById('timeLeftDisplay')) 
+                document.getElementById('timeLeftDisplay').innerText=timeLeft;
+            if(document.getElementById('questionProgress'))
+                document.getElementById('questionProgress').style.width = (timeLeft/45)*100+'%';
+            if(timeLeft<=0){ 
+                clearInterval(timerInterval); 
+                nextQuestionOrFinish(); 
+            }
+        },1000);
+    }
+    
+    function updateGameUI(data) {
+        let qs = data.questions || currentGameQuestions;
+        if(!qs.length) return;
+        let qd = qs[data.qIndex];
+        if(!qd) return;
+        document.getElementById('questionText').innerHTML = qd.q;
+        document.getElementById('qCount').innerHTML = `${data.qIndex+1}`;
+        document.getElementById('totalQ').innerHTML = '4';
+        document.getElementById('timeLeftDisplay').innerHTML = data.timer;
+        document.getElementById('myScoreDisplay').innerHTML = data.players[myId]?.score || 0;
+        let myFound = data.players[myId]?.found || [];
+        let board = document.getElementById('answersBoard'); 
+        board.innerHTML="";
+        let idx=1;
+        for(let ans in qd.a){
+            let isFound = myFound.includes(ans);
+            board.innerHTML += `<div class="ans-item ${isFound?'found':''}">
                 <div class="ans-text">
                     <span class="ans-number">${idx}</span>
-                    ${isFound ? `✅ ${ans}` : '❓ انتظر...'}
+                    ${isFound?`✅ ${ans}`:'❓ لم يكتشف بعد'}
                 </div>
-                <span class="ans-value">${isFound ? qData.a[ans] + '%' : '???'}</span>
+                <span class="ans-value">${isFound?qd.a[ans]+'%':'???'}</span>
             </div>`;
-        idx++;
-    }
-}
-
-// Submit Guess
-function submitGuess() {
-    const guessInput = document.getElementById('guessInput');
-    const guess = guessInput.value.trim();
-    const feedbackMsg = document.getElementById('feedbackMsg');
-    
-    if(!guess) { 
-        feedbackMsg.className = 'feedback-msg feedback-error';
-        feedbackMsg.innerHTML = "✏️ اكتب تخميناً أولاً!";
-        return; 
-    }
-    
-    db.ref('rooms/' + currentRoom).once('value', snap => {
-        const data = snap.val();
-        if(!data || data.status !== 'playing') return;
-        const questions = data.questions || currentGameQuestions;
-        const qData = questions[data.qIndex];
-        let matchedAnswer = null;
-        for(let ans in qData.a) if(isMatchingAnswer(guess, ans)) { matchedAnswer = ans; break; }
-        const myFound = data.players[myId]?.found || [];
-        
-        if(matchedAnswer && !myFound.includes(matchedAnswer)) {
-            const points = qData.a[matchedAnswer];
-            const newScore = (data.players[myId]?.score || 0) + points;
-            const newFound = [...myFound, matchedAnswer];
-            db.ref('rooms/' + currentRoom + '/players/' + myId).update({ score: newScore, found: newFound });
-            guessInput.value = "";
-            feedbackMsg.className = 'feedback-msg feedback-success';
-            feedbackMsg.innerHTML = `🎉 صحيح! +${points} نقطة`;
-            showNotification(`✅ صحيح! +${points} نقطة`, "success");
-            playSuccessSound();
-            updateGameUI({...data, players: {...data.players, [myId]: {...data.players[myId], score: newScore, found: newFound}}});
-        } else if(matchedAnswer && myFound.includes(matchedAnswer)) {
-            feedbackMsg.className = 'feedback-msg feedback-error';
-            feedbackMsg.innerHTML = "⚠️ هذه الإجابة سبق أن اكتشفتها!";
-            showNotification("⚠️ هذه الإجابة سبق أن اكتشفتها!", "error");
-        } else {
-            // ❌ WRONG: clear input automatically
-            guessInput.value = "";
-            feedbackMsg.className = 'feedback-msg feedback-error';
-            feedbackMsg.innerHTML = `❌ "${guess}" غير صحيح! تم مسح الإجابة`;
-            showNotification(`❌ "${guess}" غير صحيح! تم مسح الحقل`, "error");
-            playBeep(400, 0.2, 0.2);
+            idx++;
         }
-    });
-}
-
-// Next Question or Finish
-function nextQuestionOrFinish() {
-    if(!isHost) return;
-    db.ref('rooms/' + currentRoom).once('value', snap => {
-        const data = snap.val();
-        if(data.qIndex < 3) {
-            db.ref('rooms/' + currentRoom).update({ qIndex: data.qIndex + 1, timer: 45 });
-            startTimer();
-            showNotification(`📋 السؤال ${data.qIndex + 2} من 4`);
-        } else db.ref('rooms/' + currentRoom).update({ status: 'finished' });
-    });
-}
-
-// Show Final Results
-function showFinalResults(players) {
-    showScreen('resultScreen');
-    const sorted = Object.values(players).sort((a, b) => b.score - a.score);
-    document.getElementById('winnerName').innerText = sorted[0].name;
+    }
     
-    // Trigger confetti for winner
-    createConfetti();
+    function submitGuess() {
+        let guess = document.getElementById('guessInput').value.trim();
+        let fb = document.getElementById('feedbackMsg');
+        if(!guess){ 
+            fb.className='feedback-msg feedback-error'; 
+            fb.innerHTML="✏️ اكتب تخميناً أولاً!"; 
+            return; 
+        }
+        db.ref('rooms/'+currentRoom).once('value', snap=>{
+            let data=snap.val(); 
+            if(!data || data.status!=='playing') return;
+            let qs=data.questions||currentGameQuestions;
+            let qd=qs[data.qIndex];
+            let matched=null;
+            // استخدام دالة المطابقة الذكية
+            for(let ans in qd.a) {
+                if(isMatchingAnswer(guess, ans)) { 
+                    matched=ans; 
+                    break; 
+                }
+            }
+            let myFound=data.players[myId]?.found||[];
+            if(matched && !myFound.includes(matched)){
+                let pts=qd.a[matched];
+                let newScore=(data.players[myId]?.score||0)+pts;
+                let newFound=[...myFound, matched];
+                db.ref(`rooms/${currentRoom}/players/${myId}`).update({ score:newScore, found:newFound });
+                document.getElementById('guessInput').value='';
+                fb.className='feedback-msg feedback-success';
+                fb.innerHTML=`🎉 صحيح! +${pts} نقطة (${matched})`;
+                showNotification(`✅ +${pts} نقطة!`, "success");
+                updateGameUI({...data, players:{...data.players, [myId]:{...data.players[myId], score:newScore, found:newFound}}});
+                playSuccessSound();
+            } else if(matched && myFound.includes(matched)){
+                fb.className='feedback-msg feedback-error';
+                fb.innerHTML="⚠️ هذه الإجابة سبق أن اكتشفتها!";
+                document.getElementById('guessInput').value='';
+            } else {
+                document.getElementById('guessInput').value='';
+                fb.className='feedback-msg feedback-error';
+                fb.innerHTML=`❌ "${guess}" غير صحيح! تم مسح الحقل - حاول مرة أخرى`;
+                showNotification(`❌ "${guess}" غير صحيح!`, "error");
+                playErrorSound();
+            }
+        });
+    }
     
-    const rankDiv = document.getElementById('rankings');
-    rankDiv.innerHTML = "";
-    sorted.forEach((p, index) => {
-        const medal = index === 0 ? '🏆' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : `${index+1}📌`));
-        rankDiv.innerHTML += `
-            <div class="rank-item">
-                <div class="rank-name">
-                    ${medal} ${p.name}
-                    ${index === 0 ? '🎉' : ''}
-                </div>
-                <div class="rank-score">⭐ ${p.score} نقطة</div>
-            </div>`;
+    function playSuccessSound() {
+        try {
+            let ctx = new (window.AudioContext||window.webkitAudioContext)();
+            let osc = ctx.createOscillator();
+            let gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = 523;
+            gain.gain.value = 0.2;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.3);
+            osc.stop(ctx.currentTime + 0.3);
+            if(ctx.state==='suspended') ctx.resume();
+        } catch(e) {}
+    }
+    
+    function playErrorSound() {
+        try {
+            let ctx = new (window.AudioContext||window.webkitAudioContext)();
+            let osc = ctx.createOscillator();
+            let gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = 400;
+            gain.gain.value = 0.15;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.2);
+            osc.stop(ctx.currentTime + 0.2);
+            if(ctx.state==='suspended') ctx.resume();
+        } catch(e) {}
+    }
+    
+    function nextQuestionOrFinish() {
+        if(!isHost) return;
+        db.ref('rooms/'+currentRoom).once('value', snap=>{
+            let data=snap.val();
+            if(data.qIndex < 3){
+                db.ref('rooms/'+currentRoom).update({ qIndex: data.qIndex+1, timer:45 });
+                startTimer();
+            } else {
+                db.ref('rooms/'+currentRoom).update({ status:'finished' });
+            }
+        });
+    }
+    
+    function showFinalResults(players){
+        showScreen('resultScreen');
+        let sorted=Object.values(players).sort((a,b)=>b.score-a.score);
+        document.getElementById('winnerName').innerText=sorted[0].name;
+        let rankDiv=document.getElementById('rankings'); 
+        rankDiv.innerHTML="";
+        sorted.forEach((p,i)=>{
+            let medal = i===0?'🏆':(i===1?'🥈':(i===2?'🥉':`${i+1}📌`));
+            rankDiv.innerHTML+=`<div class="rank-item"><div>${medal} ${p.name}</div><div>⭐ ${p.score} نقطة</div></div>`;
+        });
+        for(let i=0;i<40;i++){ 
+            let c=document.createElement('div'); 
+            c.className='confetti'; 
+            c.style.left=Math.random()*100+'%'; 
+            c.style.backgroundColor=['#ffd700','#ff6b6b','#4ecdc4','#a855f7'][Math.floor(Math.random()*4)]; 
+            document.body.appendChild(c); 
+            setTimeout(()=>c.remove(),3000);
+        }
+    }
+    
+    function leaveRoom(){ 
+        if(currentRoom) db.ref('rooms/'+currentRoom+'/players/'+myId).remove(); 
+        location.reload(); 
+    }
+    
+    document.addEventListener('keypress',(e)=>{ 
+        if(e.key==='Enter' && !document.getElementById('gameScreen').classList.contains('hidden')) submitGuess(); 
     });
-}
-
-// Leave Room
-function leaveRoom() { 
-    if(currentRoom) db.ref('rooms/' + currentRoom + '/players/' + myId).remove(); 
-    location.reload(); 
-}
-
-// Keyboard Support
-document.addEventListener('keypress', (e) => { 
-    if(e.key === 'Enter' && !document.getElementById('gameScreen').classList.contains('hidden')) submitGuess(); 
-});
 </script>
 </body>
 </html>
